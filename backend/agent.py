@@ -129,7 +129,29 @@ workflow.add_edge("summarize", END)
 app = workflow.compile()
 
 def get_graph_response(query: str):
-    """Helper function to run the graph."""
+    """Helper function to run the graph and yield intermediate updates."""
     inputs = {"messages": [HumanMessage(content=query)]}
-    result = app.invoke(inputs)
-    return result["final_response"]
+    
+    # Use app.stream to get updates from each node
+    for output in app.stream(inputs):
+        # output is a dictionary mapping node name to its state update
+        for node_name, state_update in output.items():
+            if node_name == "analyze":
+                analysis = state_update.get("analysis", {})
+                reasoning = analysis.get("reasoning", "Đang phân tích yêu cầu...")
+                yield f"🔍 **Phân tích**: {reasoning}"
+                
+                if analysis.get("action") == "call_tool":
+                    tool_name = analysis.get("tool_name")
+                    yield f"🛠️ **Gọi công cụ**: {tool_name}..."
+            
+            elif node_name == "tool":
+                results = state_update.get("tool_results", [])
+                if results:
+                    yield f"✅ **Kết quả công cụ**: Đã thu thập dữ liệu thành công."
+            
+            elif node_name == "summarize":
+                final_response = state_update.get("final_response")
+                if final_response:
+                    # Final response should be delivered without the "thinking" prefixes
+                    yield final_response

@@ -9,16 +9,29 @@ load_dotenv()
 API_KEY = os.environ.get("GOOGLE_API_KEY")
 
 def predict(message, history):
-    """Generates a response using the LangGraph agent."""
+    """Generates a response using the LangGraph agent with streaming thinking steps."""
     if not API_KEY:
-        return "Lỗi: Chưa cấu hình GOOGLE_API_KEY trong file .env"
+        yield "Lỗi: Chưa cấu hình GOOGLE_API_KEY trong file .env"
+        return
 
     try:
-        # LangGraph entry point
-        response = get_graph_response(message)
-        return response
+        thinking_steps = []
+        # LangGraph entry point (now a generator)
+        for update in get_graph_response(message):
+            # Check if it's a thinking step or the final response
+            if any(update.startswith(prefix) for prefix in ["🔍", "🛠️", "✅"]):
+                thinking_steps.append(update)
+                thinking_md = "\n".join([f"{s}" for s in thinking_steps])
+                # Show open details while thinking
+                yield f"### 🤔 Suy nghĩ...\n{thinking_md}"
+            else:
+                # This is the final response
+                thinking_md = "\n".join([f"{s}" for s in thinking_steps])
+                # Use a blockquote or details for the finished thinking
+                final_output = f"> **Tiến trình:**\n> {thinking_md.replace(chr(10), chr(10)+'> ')}\n\n{update}"
+                yield final_output
     except Exception as e:
-        return f"Error in LangGraph Agent: {str(e)}"
+        yield f"Error in LangGraph Agent: {str(e)}"
 
 # Premium Theme
 theme = gr.themes.Soft(
