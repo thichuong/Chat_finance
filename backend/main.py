@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Optional
 import uvicorn
-from backend.agent import get_agent_response
+from backend.agent import get_graph_response
 
 app = FastAPI(title="Finance Chatbot API")
 
@@ -22,6 +22,7 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     messages: List[Message]
+    session_id: str = "api-default"
 
 @app.get("/")
 async def root():
@@ -30,13 +31,15 @@ async def root():
 @app.post("/chat")
 async def chat(request: ChatRequest):
     try:
-        # Convert Pydantic models to dicts
-        messages_dict = [{"role": m.role, "content": m.content} for m in request.messages]
+        # Get the last user message
+        last_message = request.messages[-1].content if request.messages else ""
         
-        # Get AI response
-        response_text = get_agent_response(messages_dict)
+        # Run agent and collect the final response
+        final_response = ""
+        for update in get_graph_response(last_message, session_id=request.session_id):
+            final_response = update  # Last update is the final response
         
-        return {"role": "assistant", "content": response_text}
+        return {"role": "assistant", "content": final_response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in chat processing: {str(e)}")
 
