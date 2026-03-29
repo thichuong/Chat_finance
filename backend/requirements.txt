@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+pydantic
+google-genai
+yfinance
+ccxt
+vnstock
+tavily-python
+beautifulsoup4
+markdownify
+python-dotenv
+requests
+pandas
+gradio
+langgraph
+langchain-google-genai
+langchain-core
