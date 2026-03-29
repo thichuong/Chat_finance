@@ -105,3 +105,33 @@ def get_vn_stock_price(symbol: str) -> str:
     except Exception as e:
         return f"Error fetching VN stock price for {symbol}: {str(e)}"
 
+@tool
+def get_vn_indices() -> str:
+    """Gets the current levels of major Vietnamese market indices (VN-Index, VN30, HNX, UPCOM)."""
+    try:
+        v = Vnstock()
+        # Common indices. Note: Symbols might vary by source, but these are standard for VCI/MSN in vnstock
+        indices = ['VNINDEX', 'VN30', 'HNX', 'UPCOM']
+        results = []
+        
+        for index in indices:
+            try:
+                # Use VCI as it proved reliable for VNINDEX
+                df = v.stock(symbol=index, source='VCI').quote.history(
+                    start=(pd.Timestamp.now() - pd.Timedelta(days=7)).strftime('%Y-%m-%d'), 
+                    end=pd.Timestamp.now().strftime('%Y-%m-%d')
+                )
+                
+                if df is not None and not df.empty:
+                    last_row = df.iloc[-1]
+                    results.append(f"{index}: {last_row['close']} ({last_row['time']})")
+                else:
+                    results.append(f"{index}: No data")
+            except Exception:
+                results.append(f"{index}: Error")
+                
+        return " | ".join(results)
+    except Exception as e:
+        return f"Error fetching VN indices: {str(e)}"
+
+
