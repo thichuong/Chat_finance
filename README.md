@@ -1,42 +1,74 @@
 # Chat Finance 📈
 
-A sophisticated agentic financial chatbot built with Python and AI. This system leverages advanced tools and AI models to provide real-time financial data, market analysis, and portfolio management assistance.
+**Chat Finance** is an advanced agentic financial chatbot built with **Python**, **LangGraph**, and **Gemma 3**. It acts as an autonomous financial analyst, capable of fetching real-time data, performing multi-step reasoning, and synthesizing professional-grade financial reports.
+
+---
+
+## ✨ Key Features
+
+- **🇻🇳 Vietnamese Market Data**: Real-time prices for HOSE, HNX, and UPCOM, plus major indices like VN-Index and VN30.
+- **🌍 Global Equity Data**: Fetching current prices and market info for US stocks (NYSE, NASDAQ).
+- **🪙 Crypto Analysis**: Real-time cryptocurrency prices and 24h trends via Binance (CCXT).
+- **🔎 Autonomous Web Search**: Integrated with **Tavily** for the latest financial news and articles.
+- **🌐 Smart Auto-Scraping**: Automatically reads and summarizes content from relevant web search results to provide deep context.
+- **💭 Real-time Thinking**: Displays the agent's internal reasoning process (ReAct loop) as it works.
+- **🧠 Conversation Memory**: Remembers past interactions within a session for seamless follow-up questions.
+
+---
+
+## 🏗️ Architecture
+
+The system uses a **ReAct (Reason + Act)** loop powered by **LangGraph**. For a deep dive into how it works, check out:
+
+👉 **[Architecture.md](Architecture.md)**
+
+---
 
 ## 🚀 Getting Started
 
-1. **Clone the repository:**
-   ```bash
-   git clone [repository-url]
-   cd Chat_finance
-   ```
+### 1. Clone the repository
+```bash
+git clone [repository-url]
+cd Chat_finance
+```
 
-2. **Set up the environment:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
+### 2. Set up the environment
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-3. **Configure environment variables:**
-   Copy `.env.example` to `.env` and fill in your API keys (Gemini, Financial Data Providers, etc.).
+# Install dependencies
+pip install -r backend/requirements.txt
+```
 
-4. **Run the application:**
-   ```bash
-   python app.py
-   ```
+### 3. Configure Environment Variables
+Copy `.env.example` to `.env` and provide your API keys:
 
-## 🧠 Architecture
+```ini
+# Core LLM
+GOOGLE_API_KEY=your_gemini_api_key
 
-The project consists of:
-- `backend/`: Core logic for agentic workflows and tool integration.
-- `app.py`: Main entry point for the user interface.
-- `.agents/`: Configuration and specialized skills for the AI agent.
+# Tools
+TAVILY_API_KEY=your_tavily_api_key
+```
 
-## 🛠️ Features
+### 4. Run the Application
+The backend can be started directly:
+```bash
+python app.py
+```
 
-- **Real-time Stock Data**: Fetch current prices and historical information.
-- **Financial Tooling**: Integration with various financial APIs.
-- **Agentic Workflows**: Multi-step decision making for complex financial queries.
+---
+
+## 🛠️ Tech Stack
+
+- **Large Language Model**: [Gemma 3 27B IT](https://blog.google/technology/ai/google-gemma-3/)
+- **Agent Orchestration**: [LangGraph](https://www.langchain.com/langgraph)
+- **Financial APIs**: `yfinance`, `ccxt`, `vnstock`
+- **Search & Scraping**: `Tavily`, `BeautifulSoup4`, `Markdownify`
+
+---
 
 ## 📜 License
 
