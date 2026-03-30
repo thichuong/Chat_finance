@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Sidebar from './components/Sidebar';
+import MarketPanel from './components/MarketPanel';
 import MessageBubble from './components/MessageBubble';
 import ChatInput from './components/ChatInput';
-import { Sparkles, MessageCircle } from 'lucide-react';
+import { Sparkles, MessageCircle, Plus } from 'lucide-react';
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -19,7 +19,6 @@ function App() {
   }, [messages]);
 
   const handleSend = async (text) => {
-    // Add user message
     const userMsg = { id: Date.now(), text, isUser: true };
     setMessages(prev => [...prev, userMsg]);
     setIsLoading(true);
@@ -52,7 +51,6 @@ function App() {
             const data = JSON.parse(line);
             
             if (data.type === 'thinking') {
-              // Add to thinking steps list
               currentThinkingSteps.push({
                 id: `think_${Date.now()}_${Math.random()}`,
                 text: data.content,
@@ -60,14 +58,12 @@ function App() {
               });
               
               setMessages(prev => {
-                // Filter out any previous thinking steps for this specific turn
                 const otherMessages = prev.filter(m => !m.isThinkingStep);
                 return [...otherMessages, ...currentThinkingSteps];
               });
 
             } else if (data.type === 'final') {
               finalContent = data.content;
-              // Replace thinking steps with final response
               setMessages(prev => {
                 const filtered = prev.filter(m => !m.isThinkingStep && m.id !== aiResponseId);
                 return [...filtered, { id: aiResponseId, text: finalContent, isUser: false }];
@@ -102,106 +98,166 @@ function App() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', position: 'relative' }}>
+    <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden', position: 'relative' }}>
       <div className="bg-mesh"></div>
-      <Sidebar />
       
-      <main style={{ 
+      <div style={{ 
         flex: 1, 
-        marginLeft: 'var(--sidebar-width)', 
-        padding: '2rem',
-        paddingBottom: '8rem',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        position: 'relative',
-        zIndex: 1
+        display: 'flex', 
+        height: '100vh',
+        width: '100vw'
       }}>
-        <header style={{ 
-          width: '100%', 
-          maxWidth: '900px', 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          marginBottom: '4rem',
-          marginTop: '1rem'
+        {/* Left Column: Market Insights & TradingView */}
+        <MarketPanel />
+
+        {/* Right Column: Chat */}
+        <main style={{ 
+          flex: '1 1 500px', 
+          maxWidth: '750px',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+          zIndex: 1,
+          borderLeft: '1px solid var(--surface-border)',
+          background: 'rgba(3, 7, 18, 0.4)',
+          backdropFilter: 'blur(20px)'
         }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+          {/* Header */}
+          <header style={{ 
+            padding: '1.25rem 1.5rem', 
+            borderBottom: '1px solid var(--surface-border)',
+            background: 'var(--surface-color)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div style={{ 
                 background: 'var(--primary-glow)', 
-                padding: '0.5rem', 
-                borderRadius: '12px',
+                padding: '0.4rem', 
+                borderRadius: '10px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 border: '1px solid var(--primary-color)'
               }}>
-                <Sparkles size={24} color="white" />
+                <Sparkles size={20} color="white" />
               </div>
-              <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>
-                Cố vấn Tài chính AI
-              </h2>
+              <div>
+                <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', margin: 0 }}>
+                  Cố vấn Tài chính AI
+                </h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--success-color)' }}></div>
+                  <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Gemma 3 Active</span>
+                </div>
+              </div>
             </div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 500 }}>
-              Phân tích xu hướng • Dữ liệu thời gian thực • Gemma 3 Powered
-            </p>
-          </div>
-        </header>
 
-        <section style={{ width: '100%', maxWidth: '900px', flex: 1 }}>
-          {messages.length === 0 ? (
-            <div style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              height: '50vh',
-              color: 'var(--text-muted)' 
-            }}>
-              <MessageCircle size={80} style={{ opacity: 0.1, marginBottom: '2rem' }} />
-              <h3 style={{ color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '1.5rem', fontWeight: 600 }}>Bạn cần hỗ trợ gì hôm nay?</h3>
-              <p style={{ fontSize: '1rem', maxWidth: '400px', textAlign: 'center', marginBottom: '2.5rem' }}>
-                Hỏi tôi về bất kỳ mã cổ phiếu nào, xu hướng thị trường crypto hoặc phân tích kỹ thuật.
-              </p>
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {["Giá Bitcoin hiện tại?", "Phân tích VN-INDEX?", "Cổ phiếu FPT thế nào?", "So sánh BTC và ETH"].map(hint => (
-                  <button 
-                    key={hint}
-                    onClick={() => handleSend(hint)}
-                    className="glass-card" 
-                    style={{ 
-                      padding: '0.75rem 1.25rem',
-                      fontSize: '0.9rem', 
-                      fontWeight: 500,
-                      cursor: 'pointer', 
-                      color: '#ffffff', // Set text color to white
-                      border: '1px solid var(--surface-border)',
-                      background: 'rgba(255, 255, 255, 0.03)'
-                    }}
-                  >
-                    {hint}
-                  </button>
+            <button 
+              onClick={handleClear}
+              className="glass-card"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.5rem 0.8rem',
+                background: 'rgba(99, 102, 241, 0.1)',
+                color: 'var(--primary-color)',
+                border: '1px solid var(--primary-color)',
+                cursor: 'pointer',
+                borderRadius: '8px',
+                fontWeight: 700,
+                fontSize: '0.75rem',
+                transition: 'var(--transition-smooth)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--primary-color)';
+                e.currentTarget.style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(99, 102, 241, 0.1)';
+                e.currentTarget.style.color = 'var(--primary-color)';
+              }}
+            >
+              <Plus size={14} />
+              Tạo Chat Mới
+            </button>
+          </header>
+
+          {/* Messages */}
+          <section style={{ 
+            flex: 1, 
+            overflowY: 'auto', 
+            padding: '1.5rem',
+            paddingBottom: '8rem',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            {messages.length === 0 ? (
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                height: '100%',
+                color: 'var(--text-muted)' 
+              }}>
+                <MessageCircle size={50} style={{ opacity: 0.1, marginBottom: '1.25rem' }} />
+                <h3 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 600 }}>Cần tư vấn đầu tư?</h3>
+                <p style={{ fontSize: '0.8rem', textAlign: 'center', maxWidth: '250px', marginBottom: '1.5rem' }}>
+                  Hỏi tôi về xu hướng VN-Index, giá BTC hoặc phân tích mã cổ phiếu cụ thể.
+                </p>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  {["Phân tích VN-INDEX?", "Giá BTC hôm nay?", "Mua vàng hay BTC?"].map(hint => (
+                    <button 
+                      key={hint}
+                      onClick={() => handleSend(hint)}
+                      className="glass-card" 
+                      style={{ 
+                        padding: '0.4rem 0.8rem',
+                        fontSize: '0.75rem', 
+                        fontWeight: 500,
+                        cursor: 'pointer', 
+                        color: 'var(--text-secondary)',
+                        border: '1px solid var(--surface-border)',
+                        background: 'rgba(255, 255, 255, 0.03)'
+                      }}
+                    >
+                      {hint}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {messages.map(msg => (
+                  <MessageBubble 
+                    key={msg.id} 
+                    message={msg.text} 
+                    isUser={msg.isUser} 
+                    isThinkingStep={msg.isThinkingStep}
+                  />
                 ))}
+                <div ref={chatEndRef} />
               </div>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {messages.map(msg => (
-                <MessageBubble 
-                  key={msg.id} 
-                  message={msg.text} 
-                  isUser={msg.isUser} 
-                  isThinkingStep={msg.isThinkingStep}
-                />
-              ))}
-              <div ref={chatEndRef} />
-            </div>
-          )}
-        </section>
+            )}
+          </section>
 
-        <ChatInput onSend={handleSend} onClear={handleClear} isLoading={isLoading} />
-      </main>
+          {/* Input Area */}
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            padding: '1.25rem 1.5rem',
+            background: 'linear-gradient(to top, var(--bg-color) 40%, transparent)',
+            zIndex: 10
+          }}>
+            <ChatInput onSend={handleSend} onClear={handleClear} isLoading={isLoading} />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

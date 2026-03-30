@@ -15,10 +15,7 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
 
   return (
     <div style={{
-      position: 'fixed',
-      bottom: '2.5rem',
-      left: 'calc(var(--sidebar-width) + 2.5rem)',
-      right: '2.5rem',
+      width: '100%',
       display: 'flex',
       justifyContent: 'center',
       zIndex: 20,
@@ -28,16 +25,15 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
         onSubmit={handleSubmit} 
         style={{
           width: '100%',
-          maxWidth: '850px',
           display: 'flex',
-          gap: '1rem',
+          gap: '0.75rem',
           alignItems: 'center',
-          padding: '0.875rem 1.25rem',
+          padding: '0.75rem 1rem',
           background: 'rgba(17, 24, 39, 0.7)',
           backdropFilter: 'blur(24px) saturate(200%)',
           border: '1px solid',
           borderColor: isFocused ? 'var(--primary-color)' : 'var(--surface-border)',
-          borderRadius: '20px',
+          borderRadius: '16px',
           boxShadow: isFocused 
             ? '0 0 25px rgba(99, 102, 241, 0.25), var(--shadow-lg)' 
             : 'var(--shadow-lg)',
