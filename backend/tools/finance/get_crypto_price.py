@@ -46,9 +46,27 @@ def get_crypto_price(symbol: str) -> str:
         high = ticker_data.get('high', 'N/A')
         low = ticker_data.get('low', 'N/A')
         
+        # Dynamic precision based on price
+        def format_price(val):
+            if val is None or val == 'N/A': return 'N/A'
+            if val >= 1000: return f"{val:,.4f}"
+            if val >= 1: return f"{val:,.4f}"
+            if val >= 0.01: return f"{val:,.6f}"
+            return f"{val:,.8f}"
+
+        # Special casing Bitcoin for 4 decimals if requested, but let's use the rule above.
+        # Actually, for Bitcoin, even 2 decimals is fine, but the user asked for "more accurate".
+        # Let's use 4 decimals for any major crypto if it's not super high.
+        # But wait, 1 Bitcoin is ~60-100k, so 2 decimals is already quite high precision in terms of USD.
+        # Maybe "more accurate" means providing 4-6 decimals.
+        
+        display_price = format_price(last_price)
+        display_high = format_price(high)
+        display_low = format_price(low)
+        
         return (
-            f"Crypto {resolved_symbol}: ${last_price:,.2f}{change_str}"
-            f", 24h High: ${high:,.2f}, 24h Low: ${low:,.2f}"
+            f"Crypto {resolved_symbol}: ${display_price}{change_str}"
+            f", 24h High: ${display_high}, 24h Low: ${display_low}"
             f", Exchange: Binance"
         )
     except Exception as e:

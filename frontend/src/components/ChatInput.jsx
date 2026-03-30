@@ -3,6 +3,7 @@ import { Send, Eraser } from 'lucide-react';
 
 const ChatInput = ({ onSend, onClear, isLoading }) => {
   const [input, setInput] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,42 +16,53 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
   return (
     <div style={{
       position: 'fixed',
-      bottom: '2rem',
-      left: 'calc(var(--sidebar-width) + 2rem)',
-      right: '2rem',
+      bottom: '2.5rem',
+      left: 'calc(var(--sidebar-width) + 2.5rem)',
+      right: '2.5rem',
       display: 'flex',
       justifyContent: 'center',
-      zIndex: 20
+      zIndex: 20,
+      transition: 'var(--transition-smooth)'
     }}>
-      <form onSubmit={handleSubmit} style={{
-        width: '100%',
-        maxWidth: '800px',
-        display: 'flex',
-        gap: '0.75rem',
-        alignItems: 'center',
-        padding: '0.75rem 1rem',
-        background: 'rgba(30, 41, 59, 0.4)',
-        backdropFilter: 'blur(16px) saturate(180%)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderRadius: 'var(--radius-lg)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
-      }}>
+      <form 
+        onSubmit={handleSubmit} 
+        style={{
+          width: '100%',
+          maxWidth: '850px',
+          display: 'flex',
+          gap: '1rem',
+          alignItems: 'center',
+          padding: '0.875rem 1.25rem',
+          background: 'rgba(17, 24, 39, 0.7)',
+          backdropFilter: 'blur(24px) saturate(200%)',
+          border: '1px solid',
+          borderColor: isFocused ? 'var(--primary-color)' : 'var(--surface-border)',
+          borderRadius: '20px',
+          boxShadow: isFocused 
+            ? '0 0 25px rgba(99, 102, 241, 0.25), var(--shadow-lg)' 
+            : 'var(--shadow-lg)',
+          transition: 'var(--transition-smooth)'
+        }}
+      >
         <button 
           type="button" 
           onClick={onClear}
           title="Xóa lịch sử"
           style={{
-            background: 'none',
-            border: 'none',
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid var(--surface-border)',
             color: 'var(--text-muted)',
             cursor: 'pointer',
-            padding: '8px',
-            borderRadius: '50%',
+            width: '42px',
+            height: '42px',
+            borderRadius: '14px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             transition: 'var(--transition-smooth)'
           }}
+          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--danger-color)'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
         >
           <Eraser size={20} />
         </button>
@@ -58,17 +70,20 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
         <input
           type="text"
           value={input}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={isLoading ? "Đang xử lý..." : "Hỏi trợ lý về thị trường, cổ phiếu..."}
+          placeholder={isLoading ? "Đang phân tích dữ liệu..." : "Hỏi trợ lý về thị trường, BTC, ETH hoặc cổ phiếu..."}
           disabled={isLoading}
           style={{
             flex: 1,
             background: 'none',
             border: 'none',
             color: 'var(--text-primary)',
-            fontSize: '1rem',
+            fontSize: '1.05rem',
+            fontWeight: 500,
             outline: 'none',
-            padding: '4px 8px'
+            padding: '8px 4px'
           }}
         />
 
@@ -76,21 +91,22 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
           type="submit" 
           disabled={!input.trim() || isLoading}
           style={{
-            background: 'var(--primary-color)',
+            background: (input.trim() && !isLoading) ? 'var(--primary-color)' : 'rgba(255, 255, 255, 0.05)',
             border: 'none',
             color: 'white',
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
+            width: '42px',
+            height: '42px',
+            borderRadius: '14px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: (input.trim() && !isLoading) ? 'pointer' : 'not-allowed',
             opacity: (input.trim() && !isLoading) ? 1 : 0.5,
-            transition: 'var(--transition-smooth)'
+            transition: 'var(--transition-smooth)',
+            boxShadow: (input.trim() && !isLoading) ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none'
           }}
         >
-          <Send size={18} />
+          <Send size={20} />
         </button>
       </form>
     </div>

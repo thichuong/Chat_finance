@@ -102,56 +102,83 @@ function App() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-color)' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', position: 'relative' }}>
+      <div className="bg-mesh"></div>
       <Sidebar />
       
       <main style={{ 
         flex: 1, 
         marginLeft: 'var(--sidebar-width)', 
         padding: '2rem',
-        paddingBottom: '8rem', // Extra space for floating input
+        paddingBottom: '8rem',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        position: 'relative',
+        zIndex: 1
       }}>
         <header style={{ 
           width: '100%', 
-          maxWidth: '850px', 
+          maxWidth: '900px', 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center', 
-          marginBottom: '3rem' 
+          marginBottom: '4rem',
+          marginTop: '1rem'
         }}>
           <div>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <Sparkles size={28} color="var(--primary-color)" />
-              Cố vấn Tài chính AI
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-              Trình độ cao cấp • Phân tích xu hướng • Tra cứu dữ liệu thời gian thực
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <div style={{ 
+                background: 'var(--primary-glow)', 
+                padding: '0.5rem', 
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid var(--primary-color)'
+              }}>
+                <Sparkles size={24} color="white" />
+              </div>
+              <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>
+                Cố vấn Tài chính AI
+              </h2>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 500 }}>
+              Phân tích xu hướng • Dữ liệu thời gian thực • Gemma 3 Powered
             </p>
           </div>
         </header>
 
-        <section style={{ width: '100%', maxWidth: '850px', flex: 1 }}>
+        <section style={{ width: '100%', maxWidth: '900px', flex: 1 }}>
           {messages.length === 0 ? (
             <div style={{ 
               display: 'flex', 
               flexDirection: 'column', 
               alignItems: 'center', 
               justifyContent: 'center', 
-              height: '40vh',
+              height: '50vh',
               color: 'var(--text-muted)' 
             }}>
-              <MessageCircle size={64} style={{ opacity: 0.2, marginBottom: '1.5rem' }} />
-              <p style={{ fontSize: '1.125rem' }}>Hãy bắt đầu bằng cách hỏi về VN-Index hoặc Bitcoin hôm nay.</p>
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {["Giá Bitcoin hiện tại?", "Phân tích VN-Index?", "Cổ phiếu FPT thế nào?"].map(hint => (
+              <MessageCircle size={80} style={{ opacity: 0.1, marginBottom: '2rem' }} />
+              <h3 style={{ color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '1.5rem', fontWeight: 600 }}>Bạn cần hỗ trợ gì hôm nay?</h3>
+              <p style={{ fontSize: '1rem', maxWidth: '400px', textAlign: 'center', marginBottom: '2.5rem' }}>
+                Hỏi tôi về bất kỳ mã cổ phiếu nào, xu hướng thị trường crypto hoặc phân tích kỹ thuật.
+              </p>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                {["Giá Bitcoin hiện tại?", "Phân tích VN-INDEX?", "Cổ phiếu FPT thế nào?", "So sánh BTC và ETH"].map(hint => (
                   <button 
                     key={hint}
                     onClick={() => handleSend(hint)}
                     className="glass-card" 
-                    style={{ background: 'rgba(255,255,255,0.05)', fontSize: '0.875rem', cursor: 'pointer', border: '1px solid var(--surface-border)' }}
+                    style={{ 
+                      padding: '0.75rem 1.25rem',
+                      fontSize: '0.9rem', 
+                      fontWeight: 500,
+                      cursor: 'pointer', 
+                      color: '#ffffff', // Set text color to white
+                      border: '1px solid var(--surface-border)',
+                      background: 'rgba(255, 255, 255, 0.03)'
+                    }}
                   >
                     {hint}
                   </button>
