@@ -48,14 +48,21 @@ pip install -r requirements.txt
 ```
 
 ### 2. Running
-You can now run the unified application (Backend + Frontend) with a single command:
-```bash
-python launcher.py
-```
-This will:
-1. Open a **GUI** to ask for your API keys (if not set in `.env`).
-2. Start the **FastAPI** server.
-3. Automatically open your **default browser** to the application.
+
+To run the application for development, use the following scripts in the `scripts/` directory:
+
+- **Run Full App** (Backend + Frontend):
+  ```bash
+  bash scripts/run_app.sh
+  ```
+- **Run Backend Only** (FastAPI):
+  ```bash
+  bash scripts/run_backend.sh
+  ```
+- **Run Frontend Only** (React/Vite):
+  ```bash
+  bash scripts/run_frontend.sh
+  ```
 
 ---
 
