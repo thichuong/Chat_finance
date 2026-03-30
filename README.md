@@ -1,72 +1,76 @@
 # Chat Finance 📈
 
-**Chat Finance** is an advanced agentic financial chatbot built with **Python**, **LangGraph**, and **Gemma 3**. It acts as an autonomous financial analyst, capable of fetching real-time data, performing multi-step reasoning, and synthesizing professional-grade financial reports.
+**Chat Finance** is a premium, agentic financial dashboard powered by **Gemma 3**, **LangGraph**, and **FastAPI**. It features a modern, real-time web interface built with **React** to provide professional-grade financial analysis, data visualization, and autonomous market research.
 
 ---
 
 ## ✨ Key Features
 
-- **🇻🇳 Vietnamese Market Data**: Real-time prices for HOSE, HNX, and UPCOM, plus major indices like VN-Index and VN30.
-- **🌍 Global Equity Data**: Fetching current prices and market info for US stocks (NYSE, NASDAQ).
-- **🪙 Crypto Analysis**: Real-time cryptocurrency prices and 24h trends via Binance (CCXT).
-- **🔎 Autonomous Web Search**: Integrated with **Tavily** for the latest financial news and articles.
-- **🌐 Smart Auto-Scraping**: Automatically reads and summarizes content from relevant web search results to provide deep context.
-- **💭 Real-time Thinking**: Displays the agent's internal reasoning process (ReAct loop) as it works.
-- **🧠 Conversation Memory**: Remembers past interactions within a session for seamless follow-up questions.
-
----
-
-## 🏗️ Architecture
-
-The system uses a **ReAct (Reason + Act)** loop powered by **LangGraph**. For a deep dive into how it works, check out:
-
-👉 **[Architecture.md](Architecture.md)**
+- **💎 Premium Dashboard**: Modern "Finance Terminal" UI with glassmorphism, dark mode, and real-time market tickers.
+- **💭 Real-time Thinking**: Experience the agent's reasoning process as it streams live "thoughts" during its ReAct loop.
+- **🇻🇳 Vietnamese Market Data**: Real-time evaluation of VN-Index, VN30, and all major stocks via `vnstock`.
+- **🪙 Crypto & Global Assets**: Live prices for Bitcoin (Binance) and US equities (yfinance).
+- **🔎 Autonomous Web Research**: Integrated with **Tavily** for deep web searching and automatic scraping of relevant articles.
+- **🧠 Intelligent Memory**: Remembers session context for complex, multi-turn financial inquiries.
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Clone the repository
+### 1. Set up the Environment
 ```bash
-git clone [repository-url]
-cd Chat_finance
-```
-
-### 2. Set up the environment
-```bash
-# Create virtual environment
+# Create and activate virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows: venv\Scripts\activate
+source .venv/bin/activate
 
-# Install dependencies
+# Install backend dependencies
 pip install -r requirements.txt
+
+# Install frontend dependencies
+cd frontend
+npm install
+cd ..
 ```
 
-### 3. Configure Environment Variables
+### 2. Configuration
 Copy `.env.example` to `.env` and provide your API keys:
-
 ```ini
-# Core LLM
 GOOGLE_API_KEY=your_gemini_api_key
-
-# Tools
 TAVILY_API_KEY=your_tavily_api_key
 ```
 
-### 4. Run the Application
-The backend can be started directly:
+### 3. Run the Application
+You need to start both the backend API and the frontend dev server.
+
+**Terminal 1: Backend**
 ```bash
-python app.py
+python api.py
 ```
+
+**Terminal 2: Frontend**
+```bash
+cd frontend
+npm run dev
+```
+Accessible at: [http://localhost:5173](http://localhost:5173)
+
+---
+
+## 🏗️ Architecture
+
+The system uses a **ReAct (Reason + Act)** logic loop wrapped in a streaming FastAPI backend. For a deep dive:
+
+👉 **[Architecture.md](Architecture.md)**
 
 ---
 
 ## 🛠️ Tech Stack
 
 - **Large Language Model**: [Gemma 3 27B IT](https://blog.google/technology/ai/google-gemma-3/)
-- **Agent Orchestration**: [LangGraph](https://www.langchain.com/langgraph)
-- **Financial APIs**: `yfinance`, `ccxt`, `vnstock`
-- **Search & Scraping**: `Tavily`, `BeautifulSoup4`, `Markdownify`
+- **Backend API**: FastAPI (Python)
+- **Frontend**: React + Vite (Vanilla CSS)
+- **Agent Orchestration**: LangGraph
+- **Data APIs**: `yfinance`, `ccxt`, `vnstock`, `Tavily`
 
 ---
 

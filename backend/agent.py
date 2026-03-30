@@ -48,7 +48,8 @@ def get_graph_response(query: str, session_id: str = "default"):
     }
     
     last_thinking_idx = 0  # Track which updates we've already yielded
-    
+    final_yielded = False  # Track if the final response has been yielded
+
     for output in app.stream(inputs):
         for node_name, state_update in output.items():
             # Yield new thinking updates
@@ -57,10 +58,10 @@ def get_graph_response(query: str, session_id: str = "default"):
                 yield update
             last_thinking_idx = len(updates)
             
-            # Yield final response
-            if node_name == "generate" or state_update.get("final_response"):
-                final = state_update.get("final_response", "")
-                if final:
-                    # Save to memory
-                    memory.add_ai_message(final)
-                    yield final
+            # Yield final response (only once)
+            final = state_update.get("final_response", "")
+            if final and not final_yielded:
+                # Save to memory only once
+                memory.add_ai_message(final)
+                yield final
+                final_yielded = True
