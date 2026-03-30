@@ -1,5 +1,6 @@
 import json
 import re
+from datetime import datetime
 from typing import Optional, Dict, List, Any
 from backend.prompts import FEW_SHOT_EXAMPLES
 
@@ -82,3 +83,12 @@ def _format_steps_history(steps: List[Dict[str, Any]]) -> str:
         if tools:
             lines.append(f"  Tools gọi: {', '.join(tools)}")
     return "\n".join(lines)
+
+def _get_current_time_str() -> str:
+    """Returns the current time in a human-readable format for the AI."""
+    now = datetime.now()
+    # Format: HH:MM, Thứ [Ngày], DD/MM/YYYY
+    # Vietnamese day of week mapping
+    days = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"]
+    day_str = days[now.weekday()]
+    return f"{now.strftime('%H:%M:%S')}, {day_str}, ngày {now.strftime('%d/%m/%Y')}"

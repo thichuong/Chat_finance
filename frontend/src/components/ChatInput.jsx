@@ -1,15 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, Eraser } from 'lucide-react';
 
 const ChatInput = ({ onSend, onClear, isLoading }) => {
   const [input, setInput] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const textareaRef = useRef(null);
+
+  const adjustHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustHeight();
+  }, [input]);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (input.trim() && !isLoading) {
       onSend(input);
       setInput('');
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
     }
   };
 
@@ -27,7 +50,7 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
           width: '100%',
           display: 'flex',
           gap: '0.75rem',
-          alignItems: 'center',
+          alignItems: 'flex-end',
           padding: '0.75rem 1rem',
           background: 'rgba(17, 24, 39, 0.7)',
           backdropFilter: 'blur(24px) saturate(200%)',
@@ -55,7 +78,8 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            transition: 'var(--transition-smooth)'
+            transition: 'var(--transition-smooth)',
+            marginBottom: '4px'
           }}
           onMouseEnter={(e) => e.currentTarget.style.color = 'var(--danger-color)'}
           onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
@@ -63,12 +87,14 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
           <Eraser size={20} />
         </button>
 
-        <input
-          type="text"
+        <textarea
+          ref={textareaRef}
+          rows="1"
           value={input}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder={isLoading ? "Đang phân tích dữ liệu..." : "Hỏi trợ lý về thị trường, BTC, ETH hoặc cổ phiếu..."}
           disabled={isLoading}
           style={{
@@ -79,7 +105,13 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
             fontSize: '1.05rem',
             fontWeight: 500,
             outline: 'none',
-            padding: '8px 4px'
+            padding: '10px 4px',
+            resize: 'none',
+            maxHeight: '200px',
+            minHeight: '24px',
+            lineHeight: '1.5',
+            fontFamily: 'inherit',
+            overflowY: input.split('\n').length > 5 ? 'auto' : 'hidden'
           }}
         />
 
@@ -99,7 +131,8 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
             cursor: (input.trim() && !isLoading) ? 'pointer' : 'not-allowed',
             opacity: (input.trim() && !isLoading) ? 1 : 0.5,
             transition: 'var(--transition-smooth)',
-            boxShadow: (input.trim() && !isLoading) ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none'
+            boxShadow: (input.trim() && !isLoading) ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none',
+            marginBottom: '4px'
           }}
         >
           <Send size={20} />
@@ -110,3 +143,4 @@ const ChatInput = ({ onSend, onClear, isLoading }) => {
 };
 
 export default ChatInput;
+

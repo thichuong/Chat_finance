@@ -2,7 +2,7 @@ from typing import Dict
 from backend.state import AgentState
 from backend.utils import (
     _parse_json_response, _build_few_shot_prompt,
-    _format_tool_results, _format_steps_history
+    _format_tool_results, _format_steps_history, _get_current_time_str
 )
 from backend.prompts import REACT_SYSTEM_PROMPT, EVALUATION_PROMPT_TEMPLATE
 from backend.memory import get_memory
@@ -26,6 +26,7 @@ def reason_node(state: AgentState) -> Dict:
         context_block = f"\n\nLịch sử hội thoại gần đây:\n{context}\n" if context else ""
 
         prompt = (
+            f"Thời gian hiện tại: {_get_current_time_str()}\n\n"
             f"{REACT_SYSTEM_PROMPT}\n\n"
             f"## Ví dụ:\n{_build_few_shot_prompt()}\n\n"
             f"---\n\n"
@@ -44,6 +45,7 @@ def reason_node(state: AgentState) -> Dict:
         )
         
         prompt = (
+            f"Thời gian hiện tại: {_get_current_time_str()}\n\n"
             f"{REACT_SYSTEM_PROMPT}\n\n"
             f"{eval_prompt}"
         )

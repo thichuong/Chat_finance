@@ -1,7 +1,7 @@
 from typing import Dict
 from backend.state import AgentState
 from backend.memory import get_memory
-from backend.utils import _format_tool_results
+from backend.utils import _format_tool_results, _get_current_time_str
 from backend.nodes.base import llm
 
 def generate_response_node(state: AgentState) -> Dict:
@@ -24,6 +24,7 @@ def generate_response_node(state: AgentState) -> Dict:
     context_block = f"\nLịch sử hội thoại:\n{context}\n" if context else ""
     
     prompt = (
+        f"Thời gian hiện tại: {_get_current_time_str()}\n\n"
         "Bạn là một chuyên gia tài chính. Dựa trên dữ liệu sau, hãy trả lời yêu cầu "
         "của người dùng bằng tiếng Việt chuyên nghiệp, có cấu trúc rõ ràng (dùng markdown).\n\n"
         f"Câu hỏi: {query}\n"
