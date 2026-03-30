@@ -76,8 +76,15 @@ Synthesizes professional, structured Markdown in Vietnamese once reasoning is co
 | `get_stock_price` | yfinance | US equities (AAPL, TSLA) |
 | `get_crypto_price` | ccxt/Binance | Crypto prices & 24h trends |
 | `get_vn_indices` | vnstock | Market overview (VN-Index, VN30) |
+| `get_gold_price` | yfinance | Global Gold (XAU/USD) prices |
 | `search_tavily` | Tavily API | Real-time news & search |
 | `scrape_web` | BS4 | Detailed content analysis |
+
+---
+
+## 🛠️ Extending the System
+
+The system is designed to be easily extensible. Detailed instructions on how to add new tools (logic, registry, prompts) can be found in the **[.agents/skills/add_tool/SKILL.md](.agents/skills/add_tool/SKILL.md)** file.
 
 ---
 

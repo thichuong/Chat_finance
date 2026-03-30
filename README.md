@@ -9,7 +9,7 @@
 - **💎 Premium Dashboard**: Modern "Finance Terminal" UI with glassmorphism, dark mode, and real-time market tickers.
 - **💭 Real-time Thinking**: Experience the agent's reasoning process as it streams live "thoughts" during its ReAct loop.
 - **🇻🇳 Vietnamese Market Data**: Real-time evaluation of VN-Index, VN30, and all major stocks via `vnstock`.
-- **🪙 Crypto & Global Assets**: Live prices for Bitcoin (Binance) and US equities (yfinance).
+- **🪙 Crypto & Global Assets**: Live prices for Bitcoin (Binance), Gold (XAU/USD), and US equities (yfinance).
 - **🔎 Autonomous Web Research**: Integrated with **Tavily** for deep web searching and automatic scraping of relevant articles.
 - **🧠 Intelligent Memory**: Remembers session context for complex, multi-turn financial inquiries.
 

@@ -36,13 +36,15 @@ async def market_snapshot():
         # Note: TOOLS_MAP[name].func is the actual python function for @tool
         vn_indices_raw = TOOLS_MAP["get_vn_indices"].func()
         btc_price_raw = TOOLS_MAP["get_crypto_price"].func("BTC")
+        gold_price_raw = TOOLS_MAP["get_gold_price"].func("")
         
         return {
             "status": "success",
             "data": {
                 "vn_indices": vn_indices_raw,
                 "btc": btc_price_raw,
-                "timestamp": str(asyncio.get_event_loop().time()) # Placeholder for real time
+                "gold": gold_price_raw,
+                "timestamp": str(asyncio.get_event_loop().time())
             }
         }
     except Exception as e:

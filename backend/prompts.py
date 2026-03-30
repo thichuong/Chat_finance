@@ -52,6 +52,11 @@ TOOL_DESCRIPTIONS = """
    - Mục đích: So sánh giá nhiều cổ phiếu VN cùng lúc.
    - Input: Danh sách mã, phân tách bằng dấu phẩy (VD: "FPT,VNM,HPG")
    - Khi nào dùng: Khi cần so sánh nhiều cổ phiếu với nhau.
+
+9. **get_gold_price**
+   - Mục đích: Lấy giá vàng theo thời gian thực.
+   - Input: Không cần input (truyền chuỗi rỗng "")
+   - Khi nào dùng: Khi hỏi về giá vàng.
 """
 
 # ============================================================

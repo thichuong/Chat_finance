@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, Bitcoin, BarChart3, RefreshCw } from 'lucide-react';
+import { TrendingUp, Bitcoin, BarChart3, RefreshCw, Coins } from 'lucide-react';
 
 const Sidebar = () => {
   const [marketData, setMarketData] = useState(null);
@@ -122,6 +122,29 @@ const Sidebar = () => {
               color: marketData?.btc?.includes('(+') ? 'var(--success-color)' : 'var(--danger-color)'
             }}>
                 {marketData?.btc?.includes('(') ? marketData.btc.split('(')[1].split(')')[0] : '0.00%'}
+            </span>
+          </div>
+        </div>
+        <div className="glass-card" style={{ padding: '1.25rem', background: 'rgba(255, 255, 255, 0.03)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--text-secondary)' }}>
+              <Coins size={18} color="#ffd700" />
+              <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Gold (Global)</span>
+            </div>
+          </div>
+          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>
+            {marketData?.gold?.split(':')[1]?.split('(')[0]?.trim() || '---'}
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <span style={{ 
+              fontSize: '0.8rem', 
+              fontWeight: 600,
+              padding: '2px 8px',
+              borderRadius: '6px',
+              background: marketData?.gold?.includes('(+') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+              color: marketData?.gold?.includes('(+') ? 'var(--success-color)' : 'var(--danger-color)'
+            }}>
+                {marketData?.gold?.includes('(') ? marketData.gold.split('(')[1].split(')')[0] : '0.00%'}
             </span>
           </div>
         </div>
