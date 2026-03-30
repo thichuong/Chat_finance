@@ -3,8 +3,9 @@ import json
 import asyncio
 from typing import AsyncGenerator
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from backend.agent import get_graph_response
 from backend.memory import clear_memory
@@ -15,10 +16,10 @@ load_dotenv()
 
 app = FastAPI(title="Chat Finance API")
 
-# Enable CORS for React frontend (Vite default is 5173)
+# Enable CORS for development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact origins
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,8 +33,6 @@ class ChatRequest(BaseModel):
 async def market_snapshot():
     """Returns a quick market snapshot for the frontend sidebar."""
     try:
-        # Call tools logic directly through registry (ignoring LangChain wrapper)
-        # Note: TOOLS_MAP[name].func is the actual python function for @tool
         vn_indices_raw = TOOLS_MAP["get_vn_indices"].func()
         btc_price_raw = TOOLS_MAP["get_crypto_price"].func("BTC")
         gold_price_raw = TOOLS_MAP["get_gold_price"].func("")
@@ -52,20 +51,9 @@ async def market_snapshot():
 
 @app.post("/api/chat")
 async def chat_endpoint(request: ChatRequest):
-    """
-    Streaming endpoint that yields JSON-formatted updates.
-    Types: 
-    - thinking: Intermediate reasoning steps
-    - final: The final synthesized answer
-    - error: Any exception occurred
-    """
-    
+    """Streaming endpoint that yields JSON-formatted updates."""
     async def event_generator() -> AsyncGenerator[str, None]:
         try:
-            # get_graph_response is a generator. We wrap it for async streaming.
-            # In a real production app, you might use an async generator but here we iterate the synchronous one.
-            # We use emojis to distinguish thinking vs final (as defined in app.py logic).
-            
             thinking_prefixes = ["🔍", "🛠️", "✅", "❌", "💭", "🔄", "🌐", "📝", "📊", "⚠️"]
             
             for update in get_graph_response(request.message, session_id=request.session_id):
@@ -76,7 +64,6 @@ async def chat_endpoint(request: ChatRequest):
                     "content": update
                 }
                 yield json.dumps(payload) + "\n"
-                # Small sleep to prevent blocking if needed, though get_graph_response handles the network lag
                 await asyncio.sleep(0.01)
                 
         except Exception as e:
@@ -97,6 +84,28 @@ async def clear_endpoint(request: ChatRequest):
 async def health_check():
     return {"status": "ok", "agent": "Gemma 3 Finance AI"}
 
+# Serve frontend build in production
+frontend_path = os.path.join(os.path.dirname(__file__), "frontend", "dist")
+if os.path.exists(frontend_path):
+    # Mount the assets directory for static files
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_path, "assets")), name="assets")
+    
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        # Allow API calls to pass through (this logic is just in case, but routes are defined above)
+        if full_path.startswith("api/"):
+            raise HTTPException(status_code=404)
+        
+        # Check if requested path is a file
+        file_path = os.path.join(frontend_path, full_path)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+        
+        # Default to index.html for SPA routing
+        return FileResponse(os.path.join(frontend_path, "index.html"))
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Use 127.0.0.1 for local launcher
+    uvicorn.run(app, host="127.0.0.1", port=8000)
+

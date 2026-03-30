@@ -6,66 +6,68 @@ This document provides a detailed overview of the core architecture behind the *
 
 ## 🏗️ High-Level Overview
 
-The system is designed as a full-stack agentic application. It separates the heavy-duty reasoning logic (LangGraph) from the high-performance user interface (React) via a streaming FastAPI backend.
+The system is designed as a full-stack agentic application, now enhanced with a **Desktop Launcher** for seamless user experience. It separates reasoning logic (LangGraph) from the UI (React) via a streaming FastAPI backend, all bundled into a single executable.
 
 ### Core Technologies
 - **LLM**: `gemma-3-27b-it` (via Google Generative AI)
 - **Frontend**: `React` + `Vite` (Modern Finance Dashboard)
-- **Backend API**: `FastAPI` (Asynchronous Streaming)
-- **Orchestration**: `LangGraph` (ReAct State Machine)
-- **Data Sources**: `yfinance`, `ccxt`, `vnstock`, `Tavily`
+- **Backend API**: `FastAPI` (Asynchronous Streaming & Static File Hosting)
+- **Launcher**: `Python` + `Tkinter` (Cross-platform GUI for config)
+- **Packaging**: `PyInstaller` (Self-contained binary)
 
 ---
 
 ## 📁 Project Structure
 
-### Frontend (`/frontend`)
-- **UI Components**: Modular React components (`Sidebar`, `MessageBubble`, `ChatInput`).
-- **State Management**: React hooks for managing chat history and real-time market polling.
-- **Design System**: Vanilla CSS with glassmorphism and finance-optimized dark mode.
+### Desktop Launcher (`launcher.py`)
+- **Key Check**: Validates if `.env` exists and contains valid keys.
+- **Config GUI**: Opens a Tkinter window if keys are missing.
+- **Orchestration**: Launches the FastAPI server in a background thread and opens the default browser once the server is ready.
 
 ### Backend API (`api.py`)
-- **FastAPI**: Serves as the gateway between the frontend and the agent.
-- **Streaming**: Uses `StreamingResponse` to push JSON-wrapped thinking steps and final answers to the client.
+- **Gateway**: Routes requests to the LangGraph agent.
+- **Unified Serving**: In production mode, it serves the **React** static files (from `frontend/dist`) on the root route, eliminating the need for a separate frontend server.
+- **Streaming**: Uses `StreamingResponse` for real-time thinking steps.
 
 ### Core Agent (`/backend`)
-- `backend/state.py`: Defines the `AgentState` schema.
-- `backend/utils.py`: JSON parsing, few-shot prompting, and formatting.
-- `backend/nodes/`: Individual reasoning, tool execution, and generation nodes.
-- `backend/tools/`: Suite of financial and web retrieval tools.
 - `backend/graph.py`: LangGraph workflow definition.
+- `backend/nodes/`: Reasoning, Tool Execution, and Generation.
+- `backend/tools/`: Financial and web retrieval tools.
 
 ---
 
-## 🔄 Agentic Workflow (LangGraph)
+## 🔄 Data Flow & Workflow
 
-The agent operates on a state machine that follows the ReAct pattern. Below is the updated data flow:
+The updated architecture includes the initialization phase:
 
 ```mermaid
 graph TD
-    UI([React Frontend]) <-->|Streaming JSON| API[FastAPI Gateway]
+    User([User]) -->|Starts| Launcher[Launcher: Tkinter GUI]
+    Launcher -->|Saves Keys| Env[.env]
+    Launcher -->|Starts| API[FastAPI Server]
+    API -->|Serves| UI([React Frontend])
+    UI <-->|Streaming JSON| API
+    
+    subgraph "Agentic Loop"
     API <-->|State| Reason[Node: Reason]
     Reason -->|Action: call_tools| Execute[Node: Execute Tools]
     Execute -->|Iterate| Reason
     Reason -->|Action: final_answer| Generate[Node: Generate Response]
-    Generate --> API
-
-    subgraph "ReAct Loop (Max 5x)"
-    Reason
-    Execute
     end
+    
+    Generate --> API
 ```
 
-### 1. Reason Node (`reason_node`)
-Since **Gemma 3** doesn't support native tool binding in this implementation, we use **Few-Shot ReAct Prompting**.
-- **Input**: User query + Conversation History + Tool Results.
-- **Logic**: Decides whether it has enough data to answer (`final_answer`) or needs more (`call_tools`).
+---
 
-### 2. Execute Tools Node (`execute_tools_node`)
-Maps requested actions to Python functions with parallel execution and auto-scraping from search results.
+## 🛠️ Packaging & Distribution
 
-### 3. Generate Response Node (`generate_response_node`)
-Synthesizes professional, structured Markdown in Vietnamese once reasoning is complete.
+The application is packaged using **PyInstaller**:
+1. **Frontend Compilation**: React is built into static HTML/JS/CSS.
+2. **Bundling**: All Python code, dependencies, and frontend assets are compressed into a single binary.
+3. **Distribution**: 
+    - **Linux**: A shell script handles `.desktop` entry creation.
+    - **Windows**: A batch file creates a desktop shortcut.
 
 ---
 
@@ -82,12 +84,7 @@ Synthesizes professional, structured Markdown in Vietnamese once reasoning is co
 
 ---
 
-## 🛠️ Extending the System
-
-The system is designed to be easily extensible. Detailed instructions on how to add new tools (logic, registry, prompts) can be found in the **[.agents/skills/add_tool/SKILL.md](.agents/skills/add_tool/SKILL.md)** file.
-
----
-
 ## ⚡ Real-time Feedback
 
 A unique feature of this architecture is the **Streaming Thinking Process**. The frontend consumes an `application/x-ndjson` stream from FastAPI, allowing it to display intermediate thoughts (`🔍 Phân tích`, `💭 Suy nghĩ`) as they occur, providing transparency.
+
