@@ -1,5 +1,24 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M5 20C5 11.7157 11.7157 5 20 5H20C28.2843 5 35 11.7157 35 20V35L26.25 29.1667H20C11.7157 29.1667 5 22.451 5 14.1667V20Z" fill="#10B981" />
-  <path d="M14 18L18 14L22 18L26 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-  <circle cx="26" cy="14" r="2" fill="white" />
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="chatIconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6" opacity="0.8" />
+      <stop offset="100%" stop-color="#6366f1" opacity="0.6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer AI Circle -->
+  <circle cx="32" cy="28" r="28" stroke="url(#chatIconGrad)" stroke-width="2" stroke-dasharray="4 8"/>
+  
+  <!-- Main Chat Bubble (Modern) -->
+  <path d="M48 40C48 46.6 42.6 52 36 52H24L16 60V36C16 29.4 21.4 24 28 24H36C42.6 24 48 29.4 48 36V40Z" fill="url(#chatIconGrad)" />
+  
+  <!-- Content: Rising Financial Bar Chart (Symbolic) -->
+  <rect x="22" y="38" width="4" height="8" rx="2" fill="white" fill-opacity="0.9"/>
+  <rect x="28" y="34" width="4" height="12" rx="2" fill="white" fill-opacity="0.9"/>
+  <rect x="34" y="30" width="4" height="16" rx="2" fill="white" fill-opacity="0.9"/>
+  <rect x="40" y="26" width="4" height="20" rx="2" fill="white" fill-opacity="0.9"/>
+  
+  <!-- AI Sparkles -->
+  <path d="M50 8L52 12L56 14L52 16L50 20L48 16L44 14L48 12Z" fill="#8b5cf6" />
+  <path d="M12 12L13 14L15 15L13 16L12 18L11 16L9 15L11 14Z" fill="#6366f1" />
 </svg>
