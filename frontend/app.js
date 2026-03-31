@@ -125,7 +125,7 @@ function appendMessage(text, isUser = false, isThinking = false) {
         const content = isUser ? text : marked.parse(text);
         wrapper.innerHTML = `
             <div class="msg-label">
-                ${isUser ? '<span>Khách hàng</span><i data-lucide="user" style="width: 14px;"></i>' : '<i data-lucide="bot" style="width: 14px;"></i><span>AI Analyst</span>'}
+                ${isUser ? '<span>Khách hàng</span><i data-lucide="user" style="width: 14px;"></i>' : '<img src="/assets/chat-icon.svg" style="width: 16px; height: 16px;"><span>AI Analyst</span>'}
             </div>
             <div class="bubble prose">${content}</div>
         `;
@@ -228,7 +228,7 @@ async function clearChat() {
 function renderWelcomeScreen() {
     chatMessages.innerHTML = `
         <div class="welcome-screen">
-            <i data-lucide="message-circle" class="welcome-icon"></i>
+            <img src="/assets/chat-icon.svg" class="welcome-icon" alt="Chat Icon">
             <h3>Cần tư vấn đầu tư?</h3>
             <p>Hỏi tôi về xu hướng VN-Index, giá BTC hoặc phân tích mã cổ phiếu cụ thể.</p>
             <div class="hints">

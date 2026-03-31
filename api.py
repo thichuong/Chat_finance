@@ -93,12 +93,17 @@ else:
     base_path = os.path.dirname(__file__)
 
 frontend_path = os.path.join(base_path, "frontend")
+assets_path = os.path.join(base_path, "assets")
+
+# Mount assets directory
+if os.path.exists(assets_path):
+    app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
 
 if os.path.exists(frontend_path):
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
         # Allow API calls to pass through
-        if full_path.startswith("api/"):
+        if full_path.startswith("api/") or full_path.startswith("assets/"):
             raise HTTPException(status_code=404)
         
         # Check if requested path is a file in the frontend directory

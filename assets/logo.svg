@@ -1,0 +1,47 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Modern Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <!-- Soft Premium Dropshadow -->
+    <filter id="dropShadow" x="-15%" y="-15%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Green Back Bubble (AI Magic & Finance) -->
+  <g transform="translate(85, 45)" filter="url(#dropShadow)">
+    <!-- Bubble Path -> W: 115 (25 to 140), H: 80 (25 to 105) -->
+    <path d="M140 85C140 96 131 105 120 105H55L25 135V45C25 34 34 25 45 25H120C131 25 140 34 140 45V85Z" fill="url(#greenGrad)" />
+    
+    <!-- AI Sparkles inside the Green Bubble -->
+    <path d="M82.5 45 L85.5 55 L95.5 58 L85.5 61 L82.5 71 L79.5 61 L69.5 58 L79.5 55 Z" fill="white" opacity="0.9"/>
+    <path d="M110 65 L112 70 L117 72 L112 74 L110 79 L108 74 L103 72 L108 70 Z" fill="white" opacity="0.7"/>
+    <path d="M60 75 L61.5 80 L66.5 81.5 L61.5 83 L60 88 L58.5 83 L53.5 81.5 L58.5 80 Z" fill="white" opacity="0.5"/>
+  </g>
+
+  <!-- Blue Front Bubble (Communication/Chat) -->
+  <g transform="translate(30, 85)" filter="url(#dropShadow)">
+    <!-- Bubble Path -> W: 150 (15 to 165), H: 100 (20 to 120) -->
+    <path d="M165 95C165 108.8 153.8 120 140 120H55L15 155V45C15 31.2 26.2 20 40 20H140C153.8 20 165 31.2 165 45V95Z" fill="url(#bgGrad)" />
+    
+    <!-- Rising Candlestick Chart inside the Blue Bubble (Growth/Trading) -->
+    <!-- Candle 1 -->
+    <rect x="62" y="55" width="4" height="35" rx="2" fill="white" opacity="0.6"/>
+    <rect x="57" y="65" width="14" height="15" rx="4" fill="white" />
+
+    <!-- Candle 2 -->
+    <rect x="88" y="40" width="4" height="35" rx="2" fill="white" opacity="0.6"/>
+    <rect x="83" y="45" width="14" height="20" rx="4" fill="white" />
+
+    <!-- Candle 3 -->
+    <rect x="114" y="25" width="4" height="40" rx="2" fill="white" opacity="0.6"/>
+    <rect x="109" y="30" width="14" height="25" rx="4" fill="white" />
+  </g>
+</svg>
