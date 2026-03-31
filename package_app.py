@@ -11,11 +11,9 @@ def run_command(command, cwd=None):
         sys.exit(1)
 
 def main():
-    # 1. Frontend Build
-    print("--- Building Frontend ---")
+    # 1. Frontend Build (Skips for Vanilla JS)
+    print("--- Frontend Skip (Vanilla JS) ---")
     frontend_dir = os.path.join(os.getcwd(), "frontend")
-    run_command(["npm", "install"], cwd=frontend_dir)
-    run_command(["npm", "run", "build"], cwd=frontend_dir)
 
     # 2. PyInstaller Packaging
     print("--- Packaging with PyInstaller ---")
@@ -42,7 +40,7 @@ def main():
         "--windowed",
         "--name", "ChatFinance",
         f"--add-data=backend{data_sep}backend",
-        f"--add-data=frontend/dist{data_sep}frontend/dist",
+        f"--add-data=frontend{data_sep}frontend",
         f"--add-data=assets{data_sep}assets",
         f"--add-data=.env.example{data_sep}.",
         "--icon=assets/icon.png", # PyInstaller can often use PNG for Linux, but .ico is better for Win

@@ -1,6 +1,6 @@
 # Chat Finance 📈
 
-**Chat Finance** is a premium, agentic financial dashboard powered by **Gemma 3**, **LangGraph**, and **FastAPI**. It features a modern, real-time web interface built with **React** and is now available as a **standalone desktop application** for Windows and Linux.
+**Chat Finance** is a premium, agentic financial dashboard powered by **Gemma 3**, **LangGraph**, and **FastAPI**. It features a modern, real-time web interface built with **Vanilla JS (HTML, CSS, JS)** and is now available as a **standalone desktop application** for Windows and Linux.
 
 ![Chat Finance Icon](assets/icon.png)
 
@@ -14,6 +14,7 @@
 - **💭 Real-time Thinking**: Experience the agent's reasoning process as it streams live "thoughts".
 - **🇻🇳 Vietnamese Market Data**: Real-time evaluation of VN-Index, VN30, and all major stocks.
 - **🔎 Autonomous Web Research**: Integrated with **Tavily** for deep web searching and automatic scraping.
+- **⚡ No External Dependencies**: Built with pure HTML/CSS/JS—no Node.js or npm required for the frontend.
 
 ---
 
@@ -27,7 +28,7 @@ If you are a developer, you can build the standalone executable yourself:
 # Run the automated build script
 python package_app.py
 ```
-This will compile the React frontend, bundle it with the FastAPI backend, and create a single binary in the `dist/` folder.
+This will bundle the FastAPI backend and the Vanilla JS frontend into a single binary in the `dist/` folder. **No npm install or build step is required.**
 
 ### 2. Installation
 - **Linux**: Run `bash scripts/install_linux.sh` to create a desktop shortcut.
@@ -59,10 +60,6 @@ To run the application for development, use the following scripts in the `script
   ```bash
   bash scripts/run_backend.sh
   ```
-- **Run Frontend Only** (React/Vite):
-  ```bash
-  bash scripts/run_frontend.sh
-  ```
 
 ---
 
@@ -77,8 +74,8 @@ The system uses a **ReAct (Reason + Act)** logic loop wrapped in a streaming Fas
 ## 🛠️ Tech Stack
 
 - **Large Language Model**: [Gemma 3 27B IT](https://blog.google/technology/ai/google-gemma-3/)
-- **Backend API**: FastAPI (Serving both API and React static files)
-- **Frontend**: React + Vite (Vanilla CSS)
+- **Backend API**: FastAPI (Serving both API and static assets)
+- **Frontend**: Vanilla JS (HTML5, CSS3, ES6+)
 - **Packaging**: PyInstaller
 - **GUI Config**: Tkinter
 - **Agent Orchestration**: LangGraph

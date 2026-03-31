@@ -6,11 +6,11 @@ This document provides a detailed overview of the core architecture behind the *
 
 ## 🏗️ High-Level Overview
 
-The system is designed as a full-stack agentic application, now enhanced with a **Desktop Launcher** for seamless user experience. It separates reasoning logic (LangGraph) from the UI (React) via a streaming FastAPI backend, all bundled into a single executable.
+The system is designed as a full-stack agentic application, now enhanced with a **Desktop Launcher** for seamless user experience. It separates reasoning logic (LangGraph) from the UI (Vanilla JS) via a streaming FastAPI backend, all bundled into a single executable.
 
 ### Core Technologies
 - **LLM**: `gemma-3-27b-it` (via Google Generative AI)
-- **Frontend**: `React` + `Vite` (Modern Finance Dashboard)
+- **Frontend**: `Vanilla JS`, `HTML5`, `CSS3` (Modern Finance Dashboard)
 - **Backend API**: `FastAPI` (Asynchronous Streaming & Static File Hosting)
 - **Launcher**: `Python` + `Tkinter` (Cross-platform GUI for config)
 - **Packaging**: `PyInstaller` (Self-contained binary)
@@ -26,7 +26,7 @@ The system is designed as a full-stack agentic application, now enhanced with a 
 
 ### Backend API (`api.py`)
 - **Gateway**: Routes requests to the LangGraph agent.
-- **Unified Serving**: In production mode, it serves the **React** static files (from `frontend/dist`) on the root route, eliminating the need for a separate frontend server.
+- **Unified Serving**: Serves the **Vanilla JS** static files (from `frontend/`) on the root route, eliminating the need for a separate frontend server or build process.
 - **Streaming**: Uses `StreamingResponse` for real-time thinking steps.
 
 ### Core Agent (`/backend`)
@@ -45,7 +45,7 @@ graph TD
     User([User]) -->|Starts| Launcher[Launcher: Tkinter GUI]
     Launcher -->|Saves Keys| Env[.env]
     Launcher -->|Starts| API[FastAPI Server]
-    API -->|Serves| UI([React Frontend])
+    API -->|Serves| UI([Vanilla JS Frontend])
     UI <-->|Streaming JSON| API
     
     subgraph "Agentic Loop"
@@ -63,7 +63,7 @@ graph TD
 ## 🛠️ Packaging & Distribution
 
 The application is packaged using **PyInstaller**:
-1. **Frontend Compilation**: React is built into static HTML/JS/CSS.
+1. **Frontend Inclusion**: Static HTML/JS/CSS files are bundled directly.
 2. **Bundling**: All Python code, dependencies, and frontend assets are compressed into a single binary.
 3. **Distribution**: 
     - **Linux**: A shell script handles `.desktop` entry creation.

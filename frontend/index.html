@@ -1,13 +1,95 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cố vấn Tài chính AI - Chat Finance</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Marked.js (Markdown Parser) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- TradingView -->
+    <script src="https://s3.tradingview.com/tv.js"></script>
+</head>
+<body>
+    <div class="bg-mesh"></div>
+    
+    <div class="app-container">
+        <!-- Left Column: Market Insights & TradingView -->
+        <aside class="market-panel">
+            <div class="market-cards" id="market-cards">
+                <!-- Market Cards will be injected here -->
+                <div class="glass-card loading-card">Đang tải dữ liệu thị trường...</div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-header">
+                    <h3>Biểu đồ Phân tích Kỹ thuật</h3>
+                    <div class="live-indicator">
+                        <div class="dot"></div>
+                        Dữ liệu Live
+                    </div>
+                </div>
+                <div class="glass-card chart-container">
+                    <div id="tradingview_chart"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Column: Chat -->
+        <main class="chat-panel">
+            <header class="chat-header">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i data-lucide="sparkles"></i>
+                    </div>
+                    <div>
+                        <h2>Cố vấn Tài chính AI</h2>
+                        <div class="status">
+                            <div class="dot"></div>
+                            <span>Gemma 3 Active</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="new-chat-btn" class="btn-primary">
+                    <i data-lucide="plus"></i>
+                    Tạo Chat Mới
+                </button>
+            </header>
+
+            <section class="messages-container" id="chat-messages">
+                <!-- Welcome Screen -->
+                <div class="welcome-screen">
+                    <i data-lucide="message-circle" class="welcome-icon"></i>
+                    <h3>Cần tư vấn đầu tư?</h3>
+                    <p>Hỏi tôi về xu hướng VN-Index, giá BTC hoặc phân tích mã cổ phiếu cụ thể.</p>
+                    <div class="hints">
+                        <button class="hint-btn">Phân tích VN-INDEX?</button>
+                        <button class="hint-btn">Giá BTC hôm nay?</button>
+                        <button class="hint-btn">Mua vàng hay BTC?</button>
+                    </div>
+                </div>
+            </section>
+
+            <div class="input-area">
+                <form id="chat-form" class="chat-form">
+                    <button type="button" id="clear-btn" title="Xóa lịch sử" class="icon-btn danger">
+                        <i data-lucide="eraser"></i>
+                    </button>
+                    <textarea 
+                        id="chat-input" 
+                        rows="1" 
+                        placeholder="Hỏi trợ lý về thị trường, BTC, ETH hoặc cổ phiếu..."
+                    ></textarea>
+                    <button type="submit" id="send-btn" class="icon-btn primary" disabled>
+                        <i data-lucide="send"></i>
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
 </html>

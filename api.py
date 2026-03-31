@@ -84,24 +84,29 @@ async def clear_endpoint(request: ChatRequest):
 async def health_check():
     return {"status": "ok", "agent": "Gemma 3 Finance AI"}
 
-# Serve frontend build in production
-frontend_path = os.path.join(os.path.dirname(__file__), "frontend", "dist")
+# Serve frontend in development/production (now Vanilla JS)
+# Handle PyInstaller _MEIPASS
+import sys
+if getattr(sys, 'frozen', False):
+    base_path = sys._MEIPASS
+else:
+    base_path = os.path.dirname(__file__)
+
+frontend_path = os.path.join(base_path, "frontend")
+
 if os.path.exists(frontend_path):
-    # Mount the assets directory for static files
-    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_path, "assets")), name="assets")
-    
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
-        # Allow API calls to pass through (this logic is just in case, but routes are defined above)
+        # Allow API calls to pass through
         if full_path.startswith("api/"):
             raise HTTPException(status_code=404)
         
-        # Check if requested path is a file
+        # Check if requested path is a file in the frontend directory
         file_path = os.path.join(frontend_path, full_path)
         if os.path.isfile(file_path):
             return FileResponse(file_path)
         
-        # Default to index.html for SPA routing
+        # Default to index.html
         return FileResponse(os.path.join(frontend_path, "index.html"))
 
 if __name__ == "__main__":

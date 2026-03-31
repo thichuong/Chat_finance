@@ -18,17 +18,7 @@ cleanup() {
 # Trap Ctrl+C (SIGINT)
 trap cleanup SIGINT
 
-echo "🚀 Starting Backend (FastAPI) in background..."
+# 2. Start Application
+echo "🚀 Starting Chat Finance..."
 source .venv/bin/activate
-python api.py &
-BACKEND_PID=$!
-
-# Small delay to let backend start
-sleep 2
-
-echo "🌐 Starting Frontend (Vite/React)..."
-cd frontend
-npm run dev
-
-# Wait for background process to finish if needed
-wait $BACKEND_PID
+python api.py
