@@ -228,21 +228,29 @@ body {
 }
 
 .brand-icon {
-  background: var(--primary-glow);
-  padding: 0.25rem;
-  border-radius: 10px;
+  background: rgba(99, 102, 241, 0.1);
+  padding: 0.4rem;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--primary-color);
-  width: 40px;
-  height: 40px;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  width: 48px;
+  height: 48px;
+  transition: var(--transition-smooth);
+}
+
+.brand-icon:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 15px var(--primary-glow);
 }
 
 .brand-icon img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 .brand h2 {
@@ -304,10 +312,18 @@ body {
 }
 
 .welcome-icon {
-  width: 50px;
-  height: 50px;
-  opacity: 0.1;
-  margin-bottom: 1.25rem;
+  width: 100px;
+  height: 100px;
+  opacity: 1;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 0 20px var(--primary-glow));
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
 .hints {
