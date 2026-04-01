@@ -1,47 +1,29 @@
 <svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Premium Gradients -->
-    <linearGradient id="mainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#8b5cf6" />
-      <stop offset="100%" stop-color="#6366f1" />
+    <linearGradient id="bgGrad" x1="20" y1="20" x2="236" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#EC4899" />
     </linearGradient>
-    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ec4899" opacity="0.4" />
-      <stop offset="100%" stop-color="#8b5cf6" opacity="0.1" />
+    <linearGradient id="starGrad" x1="180" y1="20" x2="240" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="100%" stop-color="#F59E0B" />
     </linearGradient>
-    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" />
-      <stop offset="100%" stop-color="#a5b4fc" />
-    </linearGradient>
-    
-    <!-- Premium Glass Effect -->
-    <filter id="glassBlur" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
-    </filter>
-    
-    <!-- Outer Glow -->
-    <filter id="outerGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#6366f1" flood-opacity="0.4"/>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#4F46E5" flood-opacity="0.4"/>
     </filter>
   </defs>
 
-  <!-- Shadow/Glow Base -->
-  <path d="M128 32L208.5 78.5V177.5L128 224L47.5 177.5V78.5L128 32Z" fill="url(#mainGrad)" opacity="0.15" filter="url(#outerGlow)"/>
+  <!-- Chat Bubble -->
+  <path filter="url(#shadow)" d="M128 200 c-17.5 0 -34.8 -4.8 -50 -13.6 L28 228 l34.4 -44.2 C44.8 165.6 36 147.5 36 128 c0 -48.6 41.2 -88 92 -88 s92 39.4 92 88 c0 48.6 -41.2 88 -92 88 z" fill="url(#bgGrad)" />
 
-  <!-- Main Hexagon Container (Glassy) -->
-  <path d="M128 40L201.5 82.4V167.1L128 209.5L54.5 167.1V82.4L128 40Z" fill="url(#mainGrad)" fill-opacity="0.9" stroke="white" stroke-opacity="0.2" stroke-width="2"/>
+  <!-- Eyes -->
+  <ellipse cx="96" cy="112" rx="8" ry="16" fill="white" />
+  <ellipse cx="160" cy="112" rx="8" ry="16" fill="white" />
   
-  <!-- Content: Rising Financial Line & Communication Symbol -->
-  <!-- Stylized "C" / Communication Path -->
-  <path d="M165 75C165 65 155 55 128 55C101 55 80 75 80 110C80 145 101 165 128 165C155 165 165 150 165 140" stroke="white" stroke-width="12" stroke-linecap="round" opacity="0.4"/>
-  
-  <!-- Rising Chart Line (Gold/White highlight) -->
-  <path d="M70 160L105 130L140 145L190 85" stroke="url(#lineGrad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" filter="url(#outerGlow)"/>
-  
-  <!-- Communication Point (Chat Bubble Tail Detail) -->
-  <path d="M115 190L128 205L141 190" fill="white" fill-opacity="0.9"/>
-  
-  <!-- AI Flare / Sparkle -->
-  <circle cx="190" cy="85" r="8" fill="white" />
-  <circle cx="190" cy="85" r="16" fill="white" fill-opacity="0.3" filter="url(#glassBlur)"/>
+  <!-- Smile (Open mouth) -->
+  <path d="M102 138 Q 128 175 154 138 Z" fill="white" />
+
+  <!-- AI Stars -->
+  <path d="M210 20 Q 210 50 240 50 Q 210 50 210 80 Q 210 50 180 50 Q 210 50 210 20 Z" fill="url(#starGrad)" />
+  <path d="M180 90 Q 180 100 190 100 Q 180 100 180 110 Q 180 100 170 100 Q 180 100 180 90 Z" fill="url(#starGrad)" />
 </svg>
