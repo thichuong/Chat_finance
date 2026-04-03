@@ -82,7 +82,7 @@ async def clear_endpoint(request: ChatRequest):
 
 @app.get("/api/health")
 async def health_check():
-    return {"status": "ok", "agent": "Gemma 3 Finance AI"}
+    return {"status": "ok", "agent": "Gemma 4 Finance AI (31B Dense)"}
 
 # Serve frontend in development/production (now Vanilla JS)
 # Handle PyInstaller _MEIPASS

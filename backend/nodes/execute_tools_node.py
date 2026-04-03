@@ -4,7 +4,7 @@ from typing import Dict
 from backend.state import AgentState
 from backend.tools.registry import TOOLS_MAP
 from backend.tools.web.scrape_web import scrape_web
-from backend.nodes.base import llm
+from backend.nodes.base import llm_generate as llm
 
 def execute_tools_node(state: AgentState) -> Dict:
     """Execute the tools requested by the reason node."""
@@ -58,26 +58,6 @@ def execute_tools_node(state: AgentState) -> Dict:
                                 (f", {error_count} lỗi" if error_count > 0 else ""))
     elif error_count > 0:
         thinking_updates.append(f"❌ **Lỗi:** {error_count} tool thất bại")
-    
-    # Auto-scrape logic
-    for res in new_results:
-        if res.get("tool") == "search_tavily" and "output" in res:
-            urls = re.findall(r'URL: (https?://\S+)', res["output"])
-            if urls:
-                thinking_updates.append(f"🌐 **Tự động cào** {min(len(urls), 2)} trang web từ kết quả tìm kiếm...")
-                for url in urls[:2]:
-                    try:
-                        scraped = scrape_web.invoke(url)
-                        summary_prompt = f"Tóm tắt ngắn gọn nội dung sau (tối đa 300 từ), tập trung vào thông tin tài chính:\n\n{scraped}"
-                        summary_response = llm.invoke(summary_prompt)
-                        new_results.append({
-                            "tool": "auto_scrape_summary",
-                            "input": url,
-                            "output": summary_response.content[:1500]
-                        })
-                    except Exception as e:
-                        new_results.append({"tool": "auto_scrape", "input": url, "error": str(e)})
-                thinking_updates.append("📝 **Đã tóm tắt** nội dung cào được.")
     
     return {
         "all_tool_results": existing_results + new_results,

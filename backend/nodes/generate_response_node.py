@@ -2,7 +2,7 @@ from typing import Dict
 from backend.state import AgentState
 from backend.memory import get_memory
 from backend.utils import _format_tool_results, _get_current_time_str
-from backend.nodes.base import llm
+from backend.nodes.base import llm_generate as llm
 
 def generate_response_node(state: AgentState) -> Dict:
     """Generate the final response when we already have sufficient data."""
@@ -21,6 +21,18 @@ def generate_response_node(state: AgentState) -> Dict:
     memory = get_memory(session_id)
     context = memory.get_context_string()
     
+    # Extract native search/grounding results
+    grounding_context = ""
+    grounding_data = state.get("grounding_results", [])
+    if grounding_data:
+        sources_list = []
+        for res in grounding_data:
+            for source in res.get("sources", []):
+                sources_list.append(f"- [{source['title']}]({source['url']})")
+        
+        if sources_list:
+            grounding_context = "\nThông tin từ Google Search:\n" + "\n".join(set(sources_list)) + "\n"
+    
     context_block = f"\nLịch sử hội thoại:\n{context}\n" if context else ""
     
     prompt = (
@@ -29,8 +41,10 @@ def generate_response_node(state: AgentState) -> Dict:
         "của người dùng bằng tiếng Việt chuyên nghiệp, có cấu trúc rõ ràng (dùng markdown).\n\n"
         f"Câu hỏi: {query}\n"
         f"{context_block}"
-        f"Dữ liệu thu thập:\n{_format_tool_results(tool_results)}\n\n"
-        "Hãy phân tích chuyên sâu, đưa ra nhận xét và khuyến nghị nếu phù hợp."
+        f"Dữ liệu từ API: \n{_format_tool_results(tool_results)}\n"
+        f"{grounding_context}\n"
+        "Hãy phân tích chuyên sâu, đưa ra nhận xét và khuyến nghị nếu phù hợp. "
+        "Hãy dẫn nguồn (citations) từ kết quả tìm kiếm nếu có thể."
     )
     
     response = llm.invoke(prompt)

@@ -1,6 +1,6 @@
 # Finance Analysis Skill
 
-This skill allows the agent to perform in-depth analysis of financial statements, market reports, and stock performance.
+This skill allows the agent to perform in-depth analysis of financial statements, market reports, and stock performance, powered by the superior native reasoning of **Gemma 4 (31B Dense)**.
 
 ## 🛠️ Components
 
@@ -19,4 +19,4 @@ The skill includes:
 
 - Standard HTTP headers for API requests.
 - Reliable caching for historical datasets.
-- Pre-processing for unstructured financial data.
+- Pre-processing for unstructured financial data using **Native Google Search Grounding**.

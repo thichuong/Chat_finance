@@ -1,7 +1,7 @@
 """
-Prompt templates for the Finance Agent (Gemma 3 compatible).
-Uses structured prompts with few-shot examples to ensure reliable JSON output
-since Gemma 3 does not support native function calling.
+Prompt templates for the Finance Agent (Gemma 4 compatible).
+Uses structured prompts with few-shot examples to ensure reliable JSON output.
+Gemma 4 31B Dense provides superior reasoning for tool selection.
 """
 
 # ============================================================
@@ -32,15 +32,6 @@ TOOL_DESCRIPTIONS = """
    - Input: Không cần input (truyền chuỗi rỗng "")
    - Khi nào dùng: Khi hỏi về thị trường chứng khoán VN nói chung, chỉ số VN-Index.
 
-5. **search_tavily**
-   - Mục đích: Tìm kiếm tin tức, bài viết, thông tin mới nhất trên internet.
-   - Input: Câu truy vấn tìm kiếm (VD: "tin tức thị trường chứng khoán Việt Nam hôm nay")
-   - Khi nào dùng: Khi cần tin tức cập nhật, phân tích thị trường, hoặc thông tin không có trong tools khác.
-
-6. **scrape_web**
-   - Mục đích: Đọc nội dung chi tiết một trang web cụ thể.
-   - Input: URL đầy đủ (VD: "https://vnexpress.net/kinh-doanh")
-   - Khi nào dùng: Khi cần đọc nội dung chi tiết từ một URL cụ thể (thường lấy từ kết quả search_tavily).
 
 7. **get_stock_history**
    - Mục đích: Lấy dữ liệu lịch sử giá cổ phiếu VN (để phân tích xu hướng).
@@ -64,7 +55,9 @@ TOOL_DESCRIPTIONS = """
 # and output structured JSON for tool calls.
 # ============================================================
 
-REACT_SYSTEM_PROMPT = f"""Bạn là một chuyên gia phân tích tài chính AI cao cấp. Bạn có khả năng sử dụng các công cụ (tools) để lấy dữ liệu thực tế.
+REACT_SYSTEM_PROMPT = f"""Bạn là một chuyên gia phân tích tài chính AI cao cấp (Gemma 4). Bạn có khả năng lập luận sắc bén và sử dụng các công cụ (tools) để lấy dữ liệu thực tế nhanh chóng.
+
+QUAN TRỌNG: Bạn tích hợp sẵn công cụ **Google Search** nguyên bản. Khi cần thông tin mới nhất từ internet, bạn sẽ tự động thực hiện tìm kiếm mà không cần gọi tool bên ngoài. Chỉ gọi các tool trong danh sách dưới đây khi cần dữ liệu chuyên biệt (giá cổ phiếu, vàng, crypto).
 
 {TOOL_DESCRIPTIONS}
 

@@ -6,7 +6,8 @@ from backend.utils import (
 )
 from backend.prompts import REACT_SYSTEM_PROMPT, EVALUATION_PROMPT_TEMPLATE
 from backend.memory import get_memory
-from backend.nodes.base import llm, MAX_ITERATIONS
+from backend.nodes.base import genai_client, llm_reason_model, reasoning_config, MAX_ITERATIONS
+from google.genai import types
 
 def reason_node(state: AgentState) -> Dict:
     """Core reasoning node — decides what to do next."""
@@ -50,9 +51,48 @@ def reason_node(state: AgentState) -> Dict:
             f"{eval_prompt}"
         )
     
-    # Call LLM
-    response = llm.invoke(prompt)
-    content = response.content
+    # Call LLM using Native SDK
+    response = genai_client.models.generate_content(
+        model=llm_reason_model,
+        contents=[types.Content(role="user", parts=[types.Part.from_text(text=prompt)])],
+        config=reasoning_config
+    )
+    
+    # Extract thinking/reasoning if available (Gemma 4 specific)
+    native_thinking = ""
+    if hasattr(response, 'candidates') and response.candidates:
+        candidate = response.candidates[0]
+        if hasattr(candidate, 'grounding_metadata') and candidate.grounding_metadata:
+            # Native Google Search was used
+            thinking_updates.append("🌐 **Sử dụng Google Search nguyên bản**...")
+            
+            # Save grounding results for synthesis in later nodes
+            grounding_data = list(state.get("grounding_results", []))
+            
+            # Serialize the metadata to a dictionary for the state
+            # This is a simplified extraction ofChunks or Search Entry Points
+            grounding_meta = candidate.grounding_metadata
+            chunk_data = []
+            if hasattr(grounding_meta, 'grounding_chunks'):
+                for chunk in grounding_meta.grounding_chunks:
+                    if hasattr(chunk, 'web') and chunk.web:
+                        chunk_data.append({"title": chunk.web.title, "url": chunk.web.uri})
+            
+            grounding_data.append({
+                "iteration": iteration,
+                "sources": chunk_data,
+                "search_queries": getattr(grounding_meta, 'search_entry_point', {}).get('rendered_content', '')
+            })
+            state["grounding_results"] = grounding_data
+            
+        # Check for native thinking/thought process
+        # Some versions put thinking in parts or a separate field
+        for part in candidate.content.parts:
+            if hasattr(part, 'thought') and part.thought:
+                native_thinking = part.text
+                thinking_updates.append(f"💭 **Suy nghĩ (Gemma 4):** {native_thinking}")
+    
+    content = response.text
     
     # Parse JSON
     parsed = _parse_json_response(content)

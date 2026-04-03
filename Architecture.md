@@ -1,15 +1,10 @@
 # Architecture: Chat Finance Agentic System 🤖📈
 
-This document provides a detailed overview of the core architecture behind the **Chat Finance** chatbot, powered by **Gemma 3**, **LangGraph**, and a modern web stack.
-
----
-
-## 🏗️ High-Level Overview
-
-The system is designed as a full-stack agentic application, now enhanced with a **Desktop Launcher** for seamless user experience. It separates reasoning logic (LangGraph) from the UI (Vanilla JS) via a streaming FastAPI backend, all bundled into a single executable.
+This document provides a detailed overview of the core architecture behind the **Chat Finance** is a premium, agentic financial dashboard powered by **Gemma 4 (31B Dense)**, **LangGraph**, and **FastAPI**. It features a modern, real-time web interface built with **Vanilla JS** and features **Native Google Search Grounding** for top-tier market research.
 
 ### Core Technologies
-- **LLM**: `gemma-3-27b-it` (via Google Generative AI)
+- **Large Language Model**: [Gemma 4 31B Dense](https://blog.google/technology/ai/google-gemma-4/)
+- **Search Logic**: Native Google Search Grounding (Zero-latency web research)
 - **Frontend**: `Vanilla JS`, `HTML5`, `CSS3` (Modern Finance Dashboard)
 - **Backend API**: `FastAPI` (Asynchronous Streaming & Static File Hosting)
 - **Launcher**: `Python` + `Tkinter` (Cross-platform GUI for config)
@@ -21,8 +16,11 @@ The system is designed as a full-stack agentic application, now enhanced with a 
 
 ### Desktop Launcher (`launcher.py`)
 - **Key Check**: Validates if `.env` exists and contains valid keys.
-- **Config GUI**: Opens a Tkinter window if keys are missing.
-- **Orchestration**: Launches the FastAPI server in a background thread and opens the default browser once the server is ready.
+- **⚙️ Setup**: Quick config via **Tkinter GUI** for `GOOGLE_API_KEY`. (Tavily is no longer required).
+- **💎 Premium Dashboard**: Modern "Finance Terminal" UI with glassmorphism, dark mode, and real-time market tickers.
+- **💭 Real-time Thinking**: Experience the agent's (Gemma 4) reasoning process as it streams live "thoughts".
+- **🇻🇳 Vietnamese Market Data**: Real-time evaluation of VN-Index, VN30, and all major stocks.
+- **🔎 Native Search**: Integrated with **Native Google Grounding** for lightning-fast web research and cited sources.
 
 ### Backend API (`api.py`)
 - **Gateway**: Routes requests to the LangGraph agent.
@@ -48,11 +46,11 @@ graph TD
     API -->|Serves| UI([Vanilla JS Frontend])
     UI <-->|Streaming JSON| API
     
-    subgraph "Agentic Loop"
-    API <-->|State| Reason[Node: Reason]
+    subgraph "Agentic Loop (Gemma 4)"
+    API <-->|State| Reason[Node: Reason + Native Search]
     Reason -->|Action: call_tools| Execute[Node: Execute Tools]
     Execute -->|Iterate| Reason
-    Reason -->|Action: final_answer| Generate[Node: Generate Response]
+    Reason -->|Action: final_answer| Generate[Node: Generate Response + Sources]
     end
     
     Generate --> API
@@ -66,6 +64,7 @@ The application is packaged using **PyInstaller**:
 1. **Frontend Inclusion**: Static HTML/JS/CSS files are bundled directly.
 2. **Bundling**: All Python code, dependencies, and frontend assets are compressed into a single binary.
 3. **Distribution**: 
+    - **Native Grounding**: Use Native Google Search for real-time validation of financial news.
     - **Linux**: A shell script handles `.desktop` entry creation.
     - **Windows**: A batch file creates a desktop shortcut.
 
@@ -79,8 +78,7 @@ The application is packaged using **PyInstaller**:
 | `get_crypto_price` | ccxt/Binance | Crypto prices & 24h trends |
 | `get_vn_indices` | vnstock | Market overview (VN-Index, VN30) |
 | `get_gold_price` | yfinance | Global Gold (XAU/USD) prices |
-| `search_tavily` | Tavily API | Real-time news & search |
-| `scrape_web` | BS4 | Detailed content analysis |
+| `Google Search` | Native GenAI | Native Search Grounding & Citations |
 
 ---
 

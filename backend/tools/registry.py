@@ -5,8 +5,7 @@ from backend.tools.finance.get_vn_indices import get_vn_indices
 from backend.tools.finance.get_stock_history import get_stock_history
 from backend.tools.finance.compare_stocks import compare_stocks
 from backend.tools.finance.get_gold_price import get_gold_price
-from backend.tools.web.search_tavily import search_tavily
-from backend.tools.web.scrape_web import scrape_web
+from backend.tools.finance.get_gold_price import get_gold_price
 
 TOOLS_MAP = {
     "get_stock_price": get_stock_price,
@@ -16,6 +15,4 @@ TOOLS_MAP = {
     "get_stock_history": get_stock_history,
     "compare_stocks": compare_stocks,
     "get_gold_price": get_gold_price,
-    "search_tavily": search_tavily,
-    "scrape_web": scrape_web,
 }

@@ -10,3 +10,4 @@ class AgentState(TypedDict):
     final_response: str                    # Câu trả lời cuối cùng
     session_id: str                        # ID phiên để quản lý bộ nhớ
     thinking_updates: List[str]            # Lịch sử quá trình suy nghĩ để hiển thị cho UI
+    grounding_results: List[Dict[str, Any]] # Kết quả Google Search/Grounding từ Native SDK

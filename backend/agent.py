@@ -1,5 +1,5 @@
 """
-ReAct Agent for Finance Chatbot — powered by Gemma 3.
+ReAct Agent for Finance Chatbot — powered by Gemma 4.
 
 Architecture:
   User Query → [reason] ⟷ [execute_tools] (loop max 5x) → [generate_response] → END
@@ -45,6 +45,7 @@ def get_graph_response(query: str, session_id: str = "default"):
         "final_response": "",
         "session_id": session_id,
         "thinking_updates": [],
+        "grounding_results": [],
     }
     
     last_thinking_idx = 0  # Track which updates we've already yielded
