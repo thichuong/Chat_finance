@@ -139,6 +139,7 @@ def reason_node(state: AgentState) -> Dict:
             "thinking_updates": thinking_updates,
         }
     
+    
     # Handle call_tools
     tools = parsed.get("tools", [])
     if not tools:

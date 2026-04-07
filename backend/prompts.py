@@ -32,6 +32,10 @@ TOOL_DESCRIPTIONS = """
    - Input: Không cần input (truyền chuỗi rỗng "")
    - Khi nào dùng: Khi hỏi về thị trường chứng khoán VN nói chung, chỉ số VN-Index.
 
+5. **google_search**
+   - Mục đích: Tìm kiếm thông tin mới nhất trên Google thông qua Google Search Engine nguyên bản.
+   - Input: Câu truy vấn tìm kiếm (VD: "Tin tức Vinfast hôm nay", "Giá dầu thế giới").
+   - Khi nào dùng: Khi cần tìm tin tức, sự kiện mới nhất trên internet.
 
 7. **get_stock_history**
    - Mục đích: Lấy dữ liệu lịch sử giá cổ phiếu VN (để phân tích xu hướng).
@@ -71,14 +75,13 @@ QUAN TRỌNG: Bạn tích hợp sẵn công cụ **Google Search** nguyên bản
 ## CÁCH TRẢ LỜI:
 Bạn phải trả lời theo ĐÚNG 1 trong 2 định dạng JSON sau:
 
-### Khi CẦN gọi tool:
+### Khi CẦN gọi tool (Bao gồm cả google_search):
 ```json
 {{
   "thought": "Suy nghĩ của bạn về yêu cầu và tại sao cần gọi tools",
   "action": "call_tools",
   "tools": [
-    {{"name": "tên_tool", "input": "đối_số"}},
-    {{"name": "tên_tool_2", "input": "đối_số_2"}}
+    {{"name": "tên_tool", "input": "đối_số"}}
   ]
 }}
 ```
@@ -120,7 +123,7 @@ FEW_SHOT_EXAMPLES = [
   "thought": "Cần tìm tin tức mới nhất về Tesla. Đồng thời lấy giá hiện tại để có bức tranh toàn diện.",
   "action": "call_tools",
   "tools": [
-    {"name": "search_tavily", "input": "Tesla TSLA stock news latest 2024"},
+    {"name": "google_search", "input": "Tin tức cổ phiếu Tesla TSLA mới nhất"},
     {"name": "get_stock_price", "input": "TSLA"}
   ]
 }"""
@@ -161,7 +164,7 @@ EVALUATION_PROMPT_TEMPLATE = """Bạn đã nhận được kết quả từ các
 {steps_history}
 
 Bây giờ hãy quyết định:
-- Nếu CẦN thêm dữ liệu (VD: cần scrape URL từ search, cần thêm thông tin): trả về JSON với action "call_tools"
+- Nếu CẦN tìm kiếm thông tin bằng Google / Tool: trả về JSON với action "call_tools"
 - Nếu ĐÃ ĐỦ dữ liệu: trả về JSON với action "final_answer" và câu trả lời đầy đủ
 
 Trả lời theo đúng định dạng JSON đã quy định. Chỉ trả về JSON, không thêm text khác.
