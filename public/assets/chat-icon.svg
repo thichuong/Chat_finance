@@ -1,0 +1,29 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="40" y1="40" x2="472" y2="472" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#EC4899" />
+    </linearGradient>
+    <linearGradient id="starGrad" x1="360" y1="40" x2="480" y2="160" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#4F46E5" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Chat Bubble -->
+  <path filter="url(#shadow)" d="M256 400 c-35 0 -69.6 -9.6 -100 -27.2 L56 456 l68.8 -88.4 C89.6 331.2 72 295 72 256 c0 -97.2 82.4 -176 184 -176 s184 78.8 184 176 c0 97.2 -82.4 176 -184 176 z" fill="url(#bgGrad)" />
+
+  <!-- Eyes -->
+  <ellipse cx="192" cy="224" rx="16" ry="32" fill="white" />
+  <ellipse cx="320" cy="224" rx="16" ry="32" fill="white" />
+  
+  <!-- Smile (Open mouth) -->
+  <path d="M204 276 Q 256 350 308 276 Z" fill="white" />
+
+  <!-- AI Stars -->
+  <path d="M420 40 Q 420 100 480 100 Q 420 100 420 160 Q 420 100 360 100 Q 420 100 420 40 Z" fill="url(#starGrad)" />
+  <path d="M360 180 Q 360 200 380 200 Q 360 200 360 220 Q 360 200 340 200 Q 360 200 360 180 Z" fill="url(#starGrad)" />
+</svg>
