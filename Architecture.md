@@ -1,88 +1,61 @@
 # Architecture: Chat Finance Agentic System 🤖📈
 
-This document provides a detailed overview of the core architecture behind the **Chat Finance** is a premium, agentic financial dashboard powered by **Gemma 4 (31B Dense)**, **LangGraph**, and **FastAPI**. It features a modern, real-time web interface built with **Vanilla JS** and features **Native Google Search Grounding** for top-tier market research.
-
-### Core Technologies
-- **Large Language Model**: [Gemma 4 31B Dense](https://blog.google/technology/ai/google-gemma-4/)
-- **Search Logic**: Native Google Search Grounding (Zero-latency web research)
-- **Frontend**: `Vanilla JS`, `HTML5`, `CSS3` (Modern Finance Dashboard)
-- **Backend API**: `FastAPI` (Asynchronous Streaming & Static File Hosting)
-- **Launcher**: `Python` + `Tkinter` (Cross-platform GUI for config)
-- **Packaging**: `PyInstaller` (Self-contained binary)
+This document provides a detailed overview of the core architecture behind **Chat Finance** — a serverless, agentic financial dashboard powered by **Gemma 4 (`gemma-4-26b-a4b-it`)**, **React 18**, **Vite**, **TypeScript**, and hosted on **Cloudflare Workers**.
 
 ---
 
-## 📁 Project Structure
-
-### Desktop Launcher (`launcher.py`)
-- **Key Check**: Validates if `.env` exists and contains valid keys.
-- **⚙️ Setup**: Quick config via **Tkinter GUI** for `GOOGLE_API_KEY`. (Tavily is no longer required).
-- **💎 Premium Dashboard**: Modern "Finance Terminal" UI with glassmorphism, dark mode, and real-time market tickers.
-- **💭 Real-time Thinking**: Experience the agent's (Gemma 4) reasoning process as it streams live "thoughts".
-- **🇻🇳 Vietnamese Market Data**: Real-time evaluation of VN-Index, VN30, and all major stocks.
-- **🔎 Native Search**: Integrated with **Native Google Grounding** for lightning-fast web research and cited sources.
-
-### Backend API (`api.py`)
-- **Gateway**: Routes requests to the LangGraph agent.
-- **Unified Serving**: Serves the **Vanilla JS** static files (from `frontend/`) on the root route, eliminating the need for a separate frontend server or build process.
-- **Streaming**: Uses `StreamingResponse` for real-time thinking steps.
-
-### Core Agent (`/backend`)
-- `backend/graph.py`: LangGraph workflow definition.
-- `backend/nodes/`: Reasoning, Tool Execution, and Generation.
-- `backend/tools/`: Financial and web retrieval tools.
-
----
-
-## 🔄 Data Flow & Workflow
-
-The updated architecture includes the initialization phase:
+## 🏗️ Core Architecture Overview
 
 ```mermaid
 graph TD
-    User([User]) -->|Starts| Launcher[Launcher: Tkinter GUI]
-    Launcher -->|Saves Keys| Env[.env]
-    Launcher -->|Starts| API[FastAPI Server]
-    API -->|Serves| UI([Vanilla JS Frontend])
-    UI <-->|Streaming JSON| API
-    
-    subgraph "Agentic Loop (Gemma 4)"
-    API <-->|State| Reason[Node: Reason + Native Search]
-    Reason -->|Action: call_tools| Execute[Node: Execute Tools]
-    Execute -->|Iterate| Reason
-    Reason -->|Action: final_answer| Generate[Node: Generate Response + Sources]
+    User([User]) -->|Input Query / Configure API Key| UI[React UI: ChatPanel & MarketPanel]
+    UI -->|Read / Write API Key & Memory| Storage[(Browser LocalStorage)]
+    UI -->|Async Generator Stream| AgentLoop[Client-side ReAct Loop: runAgentGraph]
+
+    subgraph "Browser Runtime (100% Client-Side Serverless)"
+        AgentLoop -->|Step 1: Reason| ReasonNode["reasonNode (gemma-4-26b-a4b-it + Google Grounding)"]
+        ReasonNode -->|Action: call_tools| ExecNode[executeToolsNode: Parallel Promise.all]
+        ExecNode -->|Loop <= 5 iterations| ReasonNode
+        ReasonNode -->|Action: final_answer| GenNode["generateResponseNode (gemma-4-26b-a4b-it)"]
+        ExecNode -->|Max iterations reached| GenNode
+        GenNode -->|Yield final report & sources| UI
     end
-    
-    Generate --> API
+
+    subgraph "External REST & Grounding APIs"
+        ExecNode -->|Fetch CORS| Binance[Binance Public API: Crypto & PAXG]
+        ExecNode -->|Fetch CORS| VNDNSE[VNDirect & DNSE APIs: VN-Index & VN Stocks]
+        ExecNode -->|Fetch CORS / Proxy| USStocks[Yahoo Finance / Stooq: US Equities]
+        ReasonNode -->|Google GenAI SDK| GoogleGrounding[Native Google Search Grounding]
+    end
 ```
 
 ---
 
-## 🛠️ Packaging & Distribution
+## 🛠️ Key Technologies
 
-The application is packaged using **PyInstaller**:
-1. **Frontend Inclusion**: Static HTML/JS/CSS files are bundled directly.
-2. **Bundling**: All Python code, dependencies, and frontend assets are compressed into a single binary.
-3. **Distribution**: 
-    - **Native Grounding**: Use Native Google Search for real-time validation of financial news.
-    - **Linux**: A shell script handles `.desktop` entry creation.
-    - **Windows**: A batch file creates a desktop shortcut.
-
----
-
-## 🛠️ Tool Registry
-
-| Tool | Source | Purpose |
-|------|--------|---------|
-| `get_stock_price` | yfinance | US equities (AAPL, TSLA) |
-| `get_crypto_price` | ccxt/Binance | Crypto prices & 24h trends |
-| `get_vn_indices` | vnstock | Market overview (VN-Index, VN30) |
-| `get_gold_price` | yfinance | Global Gold (XAU/USD) prices |
-| `Google Search` | Native GenAI | Native Search Grounding & Citations |
+- **Large Language Model**: [Gemma 4 (`gemma-4-26b-a4b-it`)](https://ai.google.dev) via official `@google/genai` TypeScript SDK.
+- **Search & Reasoning**: Native Google Search Grounding + High Thinking Level.
+- **Frontend Framework**: React 18, TypeScript, Vite 6.
+- **Styling**: Vanilla CSS Glassmorphism Dark Mode Terminal.
+- **Charting**: TradingView Embedded Live Technical Chart.
+- **Edge Hosting**: Cloudflare Workers (Static Assets SPA).
 
 ---
 
-## ⚡ Real-time Feedback
+## 🔄 Agentic Execution Flow
 
-A unique feature of this architecture is the **Streaming Thinking Process**. The frontend consumes an `application/x-ndjson` stream from FastAPI, allowing it to display intermediate thoughts (`🔍 Phân tích`, `💭 Suy nghĩ`) as they occur, providing transparency.
+1. **Intake & Context Restoration**:
+   - The user query is recorded in `ConversationMemory` (persisted in `localStorage`).
+   - The last exchanges are formatted and injected into the prompt context along with real-time timestamp information.
 
+2. **Reasoning (`reasonNode`)**:
+   - Evaluates the query or tool results from preceding iterations.
+   - Leverages `gemma-4-26b-a4b-it` to decide whether external data is required.
+   - Extracts native thoughts and Google Search citations in real time.
+
+3. **Execution (`executeToolsNode`)**:
+   - Resolves tool calls concurrently using `Promise.all()`.
+   - Normalizes input parameters and enforces resilience with try-catch blocks and API fallbacks.
+
+4. **Synthesis (`generateResponseNode`)**:
+   - When all required tools finish or when max iterations (5) are hit, synthesizes a structured Markdown report with source citations.
