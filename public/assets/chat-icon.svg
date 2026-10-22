@@ -8,13 +8,10 @@
       <stop offset="0%" stop-color="#FCD34D" />
       <stop offset="100%" stop-color="#F59E0B" />
     </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
-      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#4F46E5" flood-opacity="0.4"/>
-    </filter>
   </defs>
 
   <!-- Chat Bubble -->
-  <path filter="url(#shadow)" d="M256 400 c-35 0 -69.6 -9.6 -100 -27.2 L56 456 l68.8 -88.4 C89.6 331.2 72 295 72 256 c0 -97.2 82.4 -176 184 -176 s184 78.8 184 176 c0 97.2 -82.4 176 -184 176 z" fill="url(#bgGrad)" />
+  <path d="M256 400 c-35 0 -69.6 -9.6 -100 -27.2 L56 456 l68.8 -88.4 C89.6 331.2 72 295 72 256 c0 -97.2 82.4 -176 184 -176 s184 78.8 184 176 c0 97.2 -82.4 176 -184 176 z" fill="url(#bgGrad)" />
 
   <!-- Eyes -->
   <ellipse cx="192" cy="224" rx="16" ry="32" fill="white" />

@@ -177,7 +177,10 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
       <section className="messages-container" id="chat-messages">
         {messages.length === 0 ? (
           <div className="welcome-screen">
-            <img src="/assets/chat-icon.svg" className="welcome-icon" alt="Chat Icon" />
+            <div className="welcome-icon-container">
+              <div className="welcome-icon-glow" aria-hidden="true" />
+              <img src="/assets/chat-icon.svg" className="welcome-icon" alt="Chat Icon" />
+            </div>
             <h3>Cần tư vấn đầu tư chuyên sâu?</h3>
             <p>
               Tôi là Agent tài chính chạy bằng model <strong>gemma-4-26b-a4b-it</strong>, có khả năng
