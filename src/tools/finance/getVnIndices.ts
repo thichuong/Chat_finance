@@ -1,6 +1,44 @@
-export async function getVnIndices(): Promise<string> {
+export async function getVnIndices(_input?: string): Promise<string> {
+  // 1. DNSE Entrade Index OHLC API (Fast & Reliable)
   try {
-    // VNDirect Finfo / DNSE public API endpoint for index prices
+    const now = Math.floor(Date.now() / 1000);
+    const from = now - 10 * 86400; // 10 days window to ensure at least 2 sessions
+    const targets = ['VNINDEX', 'VN30', 'HNX', 'UPCOM'];
+
+    const results = await Promise.all(
+      targets.map(async (code) => {
+        try {
+          const res = await fetch(
+            `https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=${from}&to=${now}&symbol=${code}&resolution=1D`
+          );
+          if (!res.ok) return null;
+          const data = await res.json();
+          if (data && Array.isArray(data.c) && data.c.length > 0) {
+            const len = data.c.length;
+            const latest = data.c[len - 1];
+            const prev = len > 1 ? data.c[len - 2] : latest;
+            const change = latest - prev;
+            const pct = prev > 0 ? (change / prev) * 100 : 0;
+            const sign = pct >= 0 ? `+${pct.toFixed(2)}%` : `${pct.toFixed(2)}%`;
+            return `${code}: ${Number(latest).toLocaleString('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${sign})`;
+          }
+        } catch {
+          return null;
+        }
+        return null;
+      })
+    );
+
+    const validParts = results.filter((p): p is string => Boolean(p));
+    if (validParts.length > 0) {
+      return validParts.join(' | ');
+    }
+  } catch (err) {
+    console.warn('DNSE indices fetch failed, trying VNDirect...', err);
+  }
+
+  // 2. Backup: VNDirect Finfo API
+  try {
     const res = await fetch(
       'https://finfo-api.vndirect.com.vn/v4/market_indices?q=code:VNINDEX,VN30,HNX,UPCOM',
       { headers: { Accept: 'application/json' } }
@@ -12,7 +50,6 @@ export async function getVnIndices(): Promise<string> {
         const parts = json.data.map((item: any) => {
           const code = item.code;
           const indexValue = item.indexValue || item.point;
-          const change = item.change || 0;
           const pct = item.changePercent || (item.change && item.prevIndexValue ? (item.change / item.prevIndexValue) * 100 : 0);
           const sign = pct >= 0 ? `+${pct.toFixed(2)}%` : `${pct.toFixed(2)}%`;
           return `${code}: ${Number(indexValue).toLocaleString('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${sign})`;
@@ -20,34 +57,8 @@ export async function getVnIndices(): Promise<string> {
         return parts.join(' | ');
       }
     }
-  } catch (err) {
-    // If VNDirect fails, try DNSE or Fallback
-    console.warn('VNDirect indices fetch failed, trying DNSE...', err);
-  }
-
-  // Backup: DNSE Entrade API
-  try {
-    const res = await fetch('https://services.entrade.com.vn/chart-api/v2/indices/summary');
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        const target = ['VNINDEX', 'VN30', 'HNX', 'UPCOM'];
-        const parts = data
-          .filter((item: any) => target.includes(item.symbol || item.code))
-          .map((item: any) => {
-            const sym = item.symbol || item.code;
-            const price = item.close || item.point || item.price;
-            const changePct = item.changePercent || 0;
-            const sign = changePct >= 0 ? `+${changePct.toFixed(2)}%` : `${changePct.toFixed(2)}%`;
-            return `${sym}: ${Number(price).toFixed(2)} (${sign})`;
-          });
-        if (parts.length > 0) {
-          return parts.join(' | ');
-        }
-      }
-    }
   } catch (err2) {
-    console.warn('DNSE indices fetch failed', err2);
+    console.warn('VNDirect indices fetch failed', err2);
   }
 
   return `VNINDEX: 1,280.50 (+0.45%) | VN30: 1,305.20 (+0.38%) | HNX: 232.10 (+0.12%) | UPCOM: 91.80 (+0.05%) [Live Market Fallback]`;
