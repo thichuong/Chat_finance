@@ -7,9 +7,13 @@ import { getApiKey } from '../agent/llmClient';
 
 interface ChatPanelProps {
   onOpenSettings: () => void;
+  width?: number;
 }
 
-export const ChatPanel: React.FC<ChatPanelProps> = ({ onOpenSettings }) => {
+export const ChatPanel: React.FC<ChatPanelProps> = ({
+  onOpenSettings,
+  width,
+}) => {
   const [messages, setMessages] = useState<ChatMessageItem[]>([]);
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -139,7 +143,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ onOpenSettings }) => {
   ];
 
   return (
-    <main className="chat-panel">
+    <main className="chat-panel" style={{ width: width ? `${width}px` : undefined }}>
       <header className="chat-header">
         <div className="brand">
           <div className="brand-icon">

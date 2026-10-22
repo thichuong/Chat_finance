@@ -83,7 +83,8 @@ body {
 
 /* LEFT SIDE: Market Panel */
 .market-panel {
-  flex: 1.5;
+  flex: 1;
+  min-width: 320px;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -198,18 +199,86 @@ body {
   height: 100%;
 }
 
+/* RESIZER DIVIDER */
+.panel-resizer {
+  width: 10px;
+  flex: 0 0 10px;
+  cursor: col-resize;
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 1px solid var(--surface-border);
+  border-right: 1px solid var(--surface-border);
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+  touch-action: none;
+}
+
+.panel-resizer:hover,
+.panel-resizer.is-dragging {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.panel-resizer.is-dragging {
+  background: rgba(99, 102, 241, 0.3);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.resizer-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 42px;
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: var(--text-muted);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.panel-resizer:hover .resizer-handle,
+.panel-resizer.is-dragging .resizer-handle {
+  color: #fff;
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 10px var(--primary-glow);
+  transform: scale(1.1);
+}
+
+/* While dragging, disable pointer events on iframes and text selection */
+.app-container.is-resizing {
+  user-select: none !important;
+  cursor: col-resize !important;
+}
+
+.app-container.is-resizing * {
+  cursor: col-resize !important;
+}
+
+.app-container.is-resizing iframe {
+  pointer-events: none !important;
+}
+
 /* RIGHT SIDE: Chat Panel */
 .chat-panel {
-  flex: 1;
-  max-width: 750px;
-  min-width: 450px;
+  flex: none;
+  min-width: 320px;
+  max-width: calc(100vw - 320px);
   display: flex;
   flex-direction: column;
   position: relative;
   z-index: 1;
-  border-left: 1px solid var(--surface-border);
   background: rgba(3, 7, 18, 0.4);
   backdrop-filter: blur(20px);
+  overflow: hidden;
 }
 
 .chat-header {
